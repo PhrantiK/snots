@@ -1,11 +1,4 @@
-fpath=($ZDOTDIR $fpath)
-
 [ -d ~/.cache/zsh ] || mkdir -p ~/.cache/zsh
-
-# [ -d ~/.config/zsh ] &&
-#   for f in ~/.config/zsh/*.zsh; do
-#     source "$f"
-#   done
 
 for config (~/.config/zsh/*.zsh) source $config
 
