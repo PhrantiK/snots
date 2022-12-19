@@ -1,0 +1,13 @@
+[user]
+  name = PhrantiK
+  email = 45719263+PhrantiK@users.noreply.github.com
+
+[init]
+  defaultBranch = main
+
+[alias]
+  st = status -uno
+  stu = status
+
+[feature]
+  manyFiles = true
