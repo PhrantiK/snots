@@ -11,3 +11,5 @@
 
 [feature]
   manyFiles = true
+[pull]
+	rebase = false
