@@ -34,11 +34,20 @@ alias disks='echo "╓───── m o u n t . p o i n t s"; \
              echo "╙────────────────────────────────────── ─ ─ "; \
              df -h;'
 
+# void
 alias xg="xbps-query -l | grep"
 alias xs="fuzzypkg"
 alias xu="sudo xbps-install -Su"
 alias xr="sudo xbps-remove -R"
 alias xcl="sudo xbps-remove -Oo"
+
+# yadm
+alias yst="yadm status"
+alias ya="yadm add"
+alias yd="yadm diff"
+alias yds="yadm diff --staged"
+alias yc="yadm commit"
+alias yp="yadm push"
 
 # ┳━┓┳ ┓┏┓┓┏━┓┏┓┓o┏━┓┏┓┓┓━┓
 # ┣━ ┃ ┃┃┃┃┃   ┃ ┃┃ ┃┃┃┃┗━┓
