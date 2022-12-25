@@ -27,6 +27,6 @@ bindkey -v
 export KEYTIMEOUT=1
 source ~/.config/zsh/cursor_mode
 
-# export MANPAGER="less -R --use-color -Dd+r -Du+b"
-export MANPAGER="vim -c 'set ft=man' -"
+export MANPAGER="less -R --use-color -Dd+r -Du+b"
+# export MANPAGER="vim -c 'set ft=man' -"
 
