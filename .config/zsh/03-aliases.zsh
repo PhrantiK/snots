@@ -27,6 +27,12 @@ alias ls="ls --color=auto --group-directories-first"
 alias l="ls -lh"
 alias la="ls -lah"
 
+# tmux
+alias t="tmux"
+alias tls="t ls"
+alias ta="t a -t"
+alias tn="t new -t"
+
 alias disks='echo "╓───── m o u n t . p o i n t s"; \
              echo "╙────────────────────────────────────── ─ ─ "; \
              lsblk -a; echo ""; \
