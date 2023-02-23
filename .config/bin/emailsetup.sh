@@ -14,6 +14,7 @@ printf "   port 587\n" >> /etc/msmtprc; \
 printf "   tls on\n" >> /etc/msmtprc; \
 printf "   tls_starttls on\n" >> /etc/msmtprc; \
 printf "   auth on\n" >> /etc/msmtprc; \
+printf "   aliases /etc/aliases\n" >> /etc/msmtprc; \
 printf "\n" >> /etc/msmtprc; \
 
 printf "logfile /var/log/msmtp\n" >> /etc/msmtprc; \
@@ -31,6 +32,8 @@ echo -n "Enter FROM address: "; \
 read VAR2; \
 printf "   from $VAR2\n" >> /etc/msmtprc; \
 printf "\n" >> /etc/msmtprc; \
+printf "default: $VAR2\n" >> /etc/aliases; \
+newaliases; \
 unset VAR2; \
 
 echo -n "Enter Username: "; \
