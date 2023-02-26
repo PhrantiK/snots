@@ -1,4 +1,4 @@
-/bin/sh
+#!/bin/sh
 
 apt update; \
 apt install msmtp -y; \
@@ -62,7 +62,7 @@ chown msmtp:msmtp /var/log/msmtp; \
 chmod 660 /var/log/msmtp; \
 
 echo ""; \
-echo ""; \
+echo "Send a Test Email"; \
 echo -n "Enter an email address: "; \
 read VAR6; \
 echo -e "Subject: MySubject\r\n\r\ntestmail" | msmtp $VAR6; \
