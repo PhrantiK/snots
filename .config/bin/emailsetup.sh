@@ -32,8 +32,6 @@ echo -n "Enter FROM address: "; \
 read VAR2; \
 printf "   from $VAR2\n" >> /etc/msmtprc; \
 printf "\n" >> /etc/msmtprc; \
-printf "default: $VAR2\n" >> /etc/aliases; \
-newaliases; \
 unset VAR2; \
 
 echo -n "Enter Username: "; \
@@ -53,6 +51,11 @@ echo "Settings Applied."; \
 echo ""; \
 echo ""; \
 
+echo -n "Enter email address for root: "; \
+read VAR5; \
+printf "default: $VAR5\n" >> /etc/aliases; \
+newaliases; \
+
 groups msmtp; \
 touch /var/log/msmtp; \
 chown msmtp:msmtp /var/log/msmtp; \
@@ -61,6 +64,6 @@ chmod 660 /var/log/msmtp; \
 echo ""; \
 echo ""; \
 echo -n "Enter an email address: "; \
-read VAR5; \
-echo -e "Subject: MySubject\r\n\r\ntestmail" | msmtp $VAR5; \
-unset VAR5;
+read VAR6; \
+echo -e "Subject: MySubject\r\n\r\ntestmail" | msmtp $VAR6; \
+unset VAR6;
