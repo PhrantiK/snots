@@ -12,25 +12,25 @@ for app in "$base_dir"/*/; do
     
     if [[ -f "$wp_config" ]]; then
         folders+=("$app_name")
-        printf "%s: %s\n" $i $app_name
+        printf "$(tput setaf 2)%s: %s$(tput sgr0)\n" $i $app_name
         ((i++))
     fi
 done
 
 printf "\n"
-printf "Enter the number of the app you want to backup: "
+printf "$(tput bold)Enter the number of the app you want to backup: $(tput sgr0)"
 
 read -r selection
 
 # Check if user input is a valid number
 if ! [[ "$selection" =~ ^[0-9]+$ ]] || [[ "$selection" -gt "${#folders[@]}" ]]; then
-    printf "Invalid selection. Exiting.\n"
+    printf "$(tput setaf 1)Invalid selection. Exiting.$(tput sgr0)\n"
     exit 1
 fi
 
 app=${folders[$((selection - 1))]}
 
-printf "Running commands on the selected app: %s \n" $app
+printf "$(tput setaf 3)Running commands on the selected app: %s $(tput sgr0)\n" $app
 
 appfolder="$base_dir/$app/apps/$app"
 wpconfig="$appfolder/public/wp-config.php"
@@ -42,15 +42,15 @@ printf "Database Name: %s \n" $dbname
 printf "Database User: %s \n" $dbuser
 printf "Database Pass: %s \n" $dbpass
 
-printf "\nRunning mysqldump...\n"
+printf "$(tput setaf 6)\nRunning mysqldump...$(tput sgr0)\n"
 
 dbdump="$appfolder/$app-$date.sql.gz"
 mysqldump --no-tablespaces --add-drop-table -u $dbuser -p$dbpass $dbname | gzip > $dbdump
 
-printf "\nArchiving Files & Database...\n"
+printf "$(tput setaf 5)\nArchiving Files & Database...$(tput sgr0)\n"
 
 chown $app:$app $dbdump
 tar czPf $appfolder/$app.tgz $appfolder/public $dbdump
 rm $dbdump
 
-printf "\nDone!\n"
+printf "$(tput setaf 4)\nDone!$(tput sgr0)\n"
