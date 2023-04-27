@@ -9,6 +9,7 @@ zgenom autoupdate
 
 if ! zgenom saved; then
   # plugins
+  zgenom ohmyzsh 
   zgenom ohmyzsh plugins/git
   zgenom ohmyzsh plugins/docker-compose
   zgenom ohmyzsh --completion plugins/docker-compose
@@ -29,4 +30,3 @@ for config (~/.config/zsh/*.zsh) source $config
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 ( command -v tcc >/dev/null 2>&1 ) && tcc -run ~/.config/bin/bfetch.c
-
