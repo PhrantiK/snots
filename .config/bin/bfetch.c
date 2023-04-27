@@ -1,11 +1,26 @@
 /*
-    ┳━┓┳━┓┳━┓┏┓┓┏━┓┳ ┳
-    ┃━┃┣━ ┣━  ┃ ┃  ┃━┫
-    ┇━┛┇  ┻━┛ ┇ ┗━┛┇ ┻
-
-    Most of this code was lifted from: https://github.com/ss7m/paleofetch
-    Design lifted from: https://neil.computer/notes/neofetch/
-*/
+ *  ┳━┓┳━┓┳━┓┏┓┓┏━┓┳ ┳
+ *  ┃━┃┣━ ┣━  ┃ ┃  ┃━┫
+ *  ┇━┛┇  ┻━┛ ┇ ┗━┛┇ ┻
+ *
+ * Berkeley Fetch
+ *
+ * Tested on Ubuntu, Debian & Void. Won't work on anything else.
+ *
+ * install:
+ *  $ printf "all: bfetch\n" > Makefile && make
+ *
+ * or:
+ *  install tcc and run it without compiling
+ *  $ tcc -run bfetch.c "TITLE"
+ *
+ * usage:
+ *  $ bfetch "TITLE"
+ *  $ bfetch "$(date)"
+ *
+ *  Most of this code was lifted from: https://github.com/ss7m/paleofetch
+ *  Design lifted from: https://neil.computer/notes/neofetch/
+ */
 
 #include <arpa/inet.h>
 #include <dirent.h>
