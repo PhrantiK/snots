@@ -41,3 +41,5 @@ setopt PROMPT_SUBST
 
 unsetopt MENU_COMPLETE
 setopt AUTO_MENU
+
+bindkey '^E' autosuggest-accept
