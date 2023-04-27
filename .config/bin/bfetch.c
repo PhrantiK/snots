@@ -4,6 +4,7 @@
 
 // Most of this code was lifted from: https://github.com/ss7m/paleofetch
 
+#include <arpa/inet.h>
 #include <dirent.h>
 #include <ifaddrs.h>
 #include <limits.h>
@@ -46,7 +47,7 @@
   { (A), (B), sizeof(A) - 1, sizeof(B) - 1 }
 
 static char *get_cpu_info(), *get_os_info(), *get_local_ip(), *get_memory(),
-    *get_disk_usage(), *get_uptime(), *get_packages(),
+    *get_disk_usage(), *get_uptime(), *get_packages(), *get_fqdn(),
     *get_bar_graph(long long used, long long total);
 
 struct utsname uname_data;
@@ -414,6 +415,11 @@ static char *get_packages() {
   return pkgs;
 }
 
+static char *get_fqdn() {
+  char *fqdn = "test.lan";
+  return fqdn;
+}
+
 int main(int argc, char *argv[]) {
 
   status = uname(&uname_data);
@@ -424,7 +430,7 @@ int main(int argc, char *argv[]) {
   char *cpu_info = get_cpu_info(), *os_info = get_os_info(),
        *local_ip = get_local_ip(), *mem_info = get_memory(),
        *disk_info = get_disk_usage(), *pkgs = get_packages(),
-       *up_time = get_uptime(), *company = argv[1];
+       *up_time = get_uptime(), *fqdn = get_fqdn(), *company = argv[1];
 
   if (argc < 2) {
     company = "ACME WIDGET COMPANY";
@@ -438,7 +444,7 @@ int main(int argc, char *argv[]) {
   printf(GREEN "%3s%s\n", "",
          "└──────────────────────────────────────────────────────────┘");
   printf(RED "%4s%-12s%s" GREEN "@" RED "%s\n\n", "", "USER",
-         getpwuid(getuid())->pw_name, uname_data.nodename);
+         getpwuid(getuid())->pw_name, fqdn);
   printf(BLUE "%4s%-12s" GREEN "%s\n", "", "CPU", cpu_info);
   printf(BLUE "%4s%-12s" GREEN "%s\n", "", "OS", os_info);
   printf(BLUE "%4s%-12s" GREEN "%s %s\n", "", "Kernel", uname_data.sysname,
@@ -457,6 +463,7 @@ int main(int argc, char *argv[]) {
   free(up_time);
   free(mem_info);
   free(disk_info);
+  free(fqdn);
 
   return 0;
 }
