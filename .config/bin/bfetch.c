@@ -1,8 +1,11 @@
-// ┳━┓┳━┓┳━┓┏┓┓┏━┓┳ ┳
-// ┃━┃┣━ ┣━  ┃ ┃  ┃━┫
-// ┇━┛┇  ┻━┛ ┇ ┗━┛┇ ┻
+/*
+    ┳━┓┳━┓┳━┓┏┓┓┏━┓┳ ┳
+    ┃━┃┣━ ┣━  ┃ ┃  ┃━┫
+    ┇━┛┇  ┻━┛ ┇ ┗━┛┇ ┻
 
-// Most of this code was lifted from: https://github.com/ss7m/paleofetch
+    Most of this code was lifted from: https://github.com/ss7m/paleofetch
+    Design lifted from: https://neil.computer/notes/neofetch/
+*/
 
 #include <arpa/inet.h>
 #include <dirent.h>
@@ -68,6 +71,7 @@ struct {
 };
 
 void truncate_spaces(char *str) {
+
   int src = 0, dst = 0;
   while (*(str + dst) == ' ')
     dst++;
@@ -85,7 +89,7 @@ void truncate_spaces(char *str) {
 }
 
 void remove_substring(char *str, const char *substring, size_t len) {
-  /* shift over the rest of the string to remove substring */
+  // shift over the rest of the string to remove substring
   char *sub = strstr(str, substring);
   if (sub == NULL)
     return;
@@ -103,7 +107,7 @@ void replace_substring(char *str, const char *sub_str, const char *repl_str,
   if (start == NULL)
     return; // substring not found
 
-  /* check if we have enough space for new substring */
+  // check if we have enough space for new substring
   if (strlen(str) - sub_len + repl_len >= BUF_SIZE / 2) {
     status = -1;
     die("new substring too long to replace");
@@ -115,7 +119,8 @@ void replace_substring(char *str, const char *sub_str, const char *repl_str,
 }
 
 static char *get_cpu_info() {
-  FILE *cpuinfo = fopen("/proc/cpuinfo", "r"); /* read from cpu info */
+
+  FILE *cpuinfo = fopen("/proc/cpuinfo", "r");
   if (cpuinfo == NULL) {
     status = -1;
     die("Unable to open cpuinfo");
@@ -123,7 +128,7 @@ static char *get_cpu_info() {
 
   char *cpu_model = malloc(BUF_SIZE / 2);
   char *line = NULL;
-  size_t len; /* unused */
+  size_t len; // unused
   int num_cores = 0, cpu_freq, prec = 3;
   double freq;
   char freq_unit[] = "GHz";
@@ -153,7 +158,7 @@ static char *get_cpu_info() {
       prec = 1; // we don't want zero decimal places
   }
 
-  /* remove unneeded information */
+  // Cleanup text & remove superfluous info
   for (int i = 0; i < COUNT(cpu_config); ++i) {
     if (cpu_config[i].repl_str == NULL) {
       remove_substring(cpu_model, cpu_config[i].substring,
@@ -178,6 +183,7 @@ static char *get_cpu_info() {
 }
 
 static char *get_memory() {
+
   int total, shared, memfree, buffers, cached, reclaimable;
 
   FILE *meminfo = fopen("/proc/meminfo", "r"); /* get infomation from meminfo */
@@ -187,10 +193,10 @@ static char *get_memory() {
   }
 
   char *line = NULL; // allocation handled automatically by getline()
-  size_t len;        /* unused */
+  size_t len;        // unused
 
   while (getline(&line, &len, meminfo) != -1) {
-    /* if sscanf doesn't find a match, pointer is untouched */
+    // if sscanf doesn't find a match, pointer is untouched
     sscanf(line, "MemTotal: %d", &total);
     sscanf(line, "Shmem: %d", &shared);
     sscanf(line, "MemFree: %d", &memfree);
@@ -218,6 +224,7 @@ static char *get_memory() {
 }
 
 static char *get_disk_usage() {
+
   char *disk_usage = malloc(BUF_SIZE);
   long total, used, free;
   int percentage;
@@ -240,6 +247,7 @@ static char *get_disk_usage() {
 }
 
 static char *get_os_info() {
+
   char *os = malloc(BUF_SIZE), *name = malloc(BUF_SIZE), *line = NULL;
   size_t len;
   FILE *os_release = fopen("/etc/os-release", "r");
@@ -262,6 +270,7 @@ static char *get_os_info() {
 }
 
 static char *get_uptime() {
+
   long seconds = sys_info.uptime;
   struct {
     char *name;
@@ -275,7 +284,7 @@ static char *get_uptime() {
   int n, len = 0;
   char *uptime = malloc(BUF_SIZE);
   for (int i = 0; i < 3; ++i) {
-    if ((n = seconds / units[i].secs) || i == 2) /* always print minutes */
+    if ((n = seconds / units[i].secs) || i == 2) // always print minutes
       len += snprintf(uptime + len, BUF_SIZE - len, "%d %s%s, ", n,
                       units[i].name, n != 1 ? "s" : "");
     seconds %= units[i].secs;
@@ -287,14 +296,13 @@ static char *get_uptime() {
 }
 
 static char *get_local_ip() {
+
   struct ifaddrs *ifaddr, *ifa;
   int family, s;
   char host[NI_MAXHOST];
 
-  if (getifaddrs(&ifaddr) == -1) {
-    status = -1;
-    die("Error getting local IP address");
-  }
+  status = getifaddrs(&ifaddr);
+  die("Error getting local IP address");
 
   for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
     if (ifa->ifa_addr == NULL)
@@ -322,6 +330,7 @@ static char *get_local_ip() {
 }
 
 static char *get_bar_graph(long long used, long long total) {
+
   int filled = (int)(((double)used / total) * BAR_LENGTH);
   int empty = BAR_LENGTH - filled;
 
@@ -351,6 +360,7 @@ static char *get_bar_graph(long long used, long long total) {
 }
 
 unsigned long count_occurrences(FILE *file, const char *substring) {
+
   char line[1024];
   unsigned long count = 0;
 
@@ -366,6 +376,7 @@ unsigned long count_occurrences(FILE *file, const char *substring) {
 }
 
 static char *get_packages() {
+
   const char *voidDirPath = "/var/db/xbps";
   const char *debianFilePath = "/var/lib/dpkg/status";
   char fileName[2 * PATH_MAX + 2];
@@ -416,8 +427,20 @@ static char *get_packages() {
 }
 
 static char *get_fqdn() {
-  char *fqdn = "test.lan";
-  return fqdn;
+
+  status = uname(&uname_data);
+  die("uname failed");
+
+  struct addrinfo hints, *res;
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  hints.ai_flags = AI_CANONNAME;
+
+  status = getaddrinfo(uname_data.nodename, NULL, &hints, &res);
+  die("getaddrinfo: %s\n", gai_strerror(status));
+
+  return res->ai_canonname;
 }
 
 int main(int argc, char *argv[]) {
