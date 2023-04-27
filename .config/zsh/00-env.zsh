@@ -7,6 +7,7 @@ export SAVEHIST=10000                   # Maximum events in history file
 export EDITOR="vim"
 export VISUAL="vim"
 
+export TERM="xterm-256color"
 d=~/.config/zsh/dircolors
 test -r $d && eval "$(dircolors $d)"
 
