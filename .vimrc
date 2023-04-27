@@ -74,6 +74,7 @@ set ignorecase
 set smartcase
 set ruler
 set relativenumber
+set number
 set wildmenu
 set gcr=a:blinkon0
 set scrolloff=3
