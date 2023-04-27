@@ -1,7 +1,5 @@
 [ -d ~/.cache/zsh ] || mkdir -p ~/.cache/zsh
 
-for config (~/.config/zsh/*.zsh) source $config
-
 [[ -f "${HOME}/.zgenom/zgenom.zsh" ]] ||
   git clone --depth 1 -- \
       https://github.com/jandamm/zgenom.git "${HOME}/.zgenom"
@@ -26,4 +24,9 @@ if ! zgenom saved; then
   zgenom compile $ZDOTDIR
 fi
 
+for config (~/.config/zsh/*.zsh) source $config
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+( command -v tcc >/dev/null 2>&1 ) && tcc -run ~/.config/bin/bfetch.c
+
