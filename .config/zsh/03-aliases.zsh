@@ -72,7 +72,7 @@ dt() { du -a ~/.config/* | awk '{print $2}' | fzf | xargs -r $EDITOR ;}
 vf() { fzf | xargs -r -I % $EDITOR % ;}
 
 # Disk usage
-du1() { gdu -h --max-depth=1 "$@" | sort -k 1,1hr -k 2,2f; }
+du1() { du -h --max-depth=1 "$@" | sort -k 1,1hr -k 2,2f; }
 
 apt-history() {
   case "$1" in
