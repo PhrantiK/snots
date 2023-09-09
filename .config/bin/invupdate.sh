@@ -110,8 +110,8 @@ chmod 600 $parent_dir/.env
 chown -R invoicing:invoicing $parent_dir
 
 # Remove temp update folder
-echo "Cleaning up old version files..."
-rm -rf "$renamed_parent"
+# echo "Cleaning up old version files..."
+# rm -rf "$renamed_parent"
 
 # Check if the contents of VERSION.txt match the latest version number
 check_version_from_file=$(cat $parent_dir/VERSION.txt)
