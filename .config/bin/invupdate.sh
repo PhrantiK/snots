@@ -80,8 +80,8 @@ cp -r "$parent_dir/public/storage" "$update_dir/public/"
 cp -r "$parent_dir/storage/logs" "$update_dir/storage/"
 
 # Uncomment and edit the lines below to add any other folders or files that you'd like to keep 
-cp -r "$parent_dir/public/helpinv" "$update_dir/"
-# cp "$parent_dir/filetokeep" "$update_dir/"
+cp -r "$parent_dir/public/helpinv" "$update_dir/public/"
+cp "$parent_dir/public/.user.ini" "$update_dir/public/"
 
 # Replace the parent folder with the update folder 
 echo "Parent and update folder switcheroo..."
@@ -94,8 +94,6 @@ sed -i 's/left:0;right:0;bottom:0/left:0;right:0;bottom:0;display:none;/' $paren
 
 # Change payment page wording
 sed -i 's/ we need more details about you./, please fill out the details below:/' $parent_dir/lang/en/texts.php
-
-echo "memory_limit = 512M" > "$parent_dir/.user.ini"
 
 # Update config
 echo "Updating config and clearing caches..."
