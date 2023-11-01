@@ -6,7 +6,6 @@ command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d" # Alias neovim 
 
 # General Aliases
 alias sudo="sudo " #Let sudo recognise aliases
-alias _="sudo "
 alias se="sudo -E vim"
 alias diff="diff --color=auto"
 alias grep="grep --color=auto"
@@ -16,7 +15,6 @@ alias mkdir="mkdir -p"
 alias sl="ls"
 alias su="sudo su"
 alias v="vim"
-alias zr="source $ZDOTDIR/.zshrc"
 alias cp="cp -iv"
 alias rm="rm -irv"
 alias c="clear"
@@ -55,6 +53,26 @@ alias yds="yadm diff --staged"
 alias yc="yadm commit"
 alias yp="yadm push"
 
+# git
+alias g="git"
+alias ga="git add"
+alias gc="git commit --verbose"
+alias gca="git commit --verbose --all"
+alias gcam="git commit --verbose --all --message"
+alias gco="git checkout"
+alias gst="git status"
+
+# compose
+alias dcb="docker compose build"
+alias dce="docker compose exec"
+alias dcps="docker compose ps"
+alias dcstop="docker compose stop"
+alias dcupd="docker compose up -d"
+alias dcl="docker compose logs"
+alias dclf="docker compose logs -f"
+alias dcpull="docker compose pull"
+alias dck="docker compose kill"
+
 # ┳━┓┳ ┓┏┓┓┏━┓┏┓┓o┏━┓┏┓┓┓━┓
 # ┣━ ┃ ┃┃┃┃┃   ┃ ┃┃ ┃┃┃┃┗━┓
 # ┇  ┇━┛┇┗┛┗━┛ ┇ ┇┛━┛┇┗┛━━┛
@@ -65,7 +83,7 @@ tmm() {
 	tmux new-session -A -s $X
 }
 
-cheat() { curl -s cheat.sh/"$@" | cat }
+cht() { curl -s cheat.sh/"$@" | cat }
 
 dt() { du -a ~/.config/* | awk '{print $2}' | fzf | xargs -r $EDITOR ;}
 

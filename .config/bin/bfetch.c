@@ -471,7 +471,7 @@ int main(int argc, char *argv[]) {
        *up_time = get_uptime(), *fqdn = get_fqdn(), *company = argv[1];
 
   if (argc < 2) {
-    company = "ACME WIDGET COMPANY";
+    company = "BERKELEY FETCH";
   }
 
   printf(GREEN "\n%3s%s\n", "",

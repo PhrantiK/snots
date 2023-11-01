@@ -9,10 +9,6 @@ zgenom autoupdate
 
 if ! zgenom saved; then
   # plugins
-  zgenom ohmyzsh 
-  zgenom ohmyzsh plugins/git
-  zgenom ohmyzsh plugins/docker-compose
-  zgenom ohmyzsh --completion plugins/docker-compose
   zgenom load zdharma-continuum/fast-syntax-highlighting
   zgenom load zsh-users/zsh-autosuggestions
   zgenom load zsh-users/zsh-completions
