@@ -5,11 +5,6 @@ if [ -z "$1" ]
     echo "Usage: $(basename $0) drive1 drive2 ..."
   exit
 fi
-if [ -n "$2" ]
-  then
-    echo "Only Erase one drive at a time!"
-  exit
-fi
 
 SMARTCTL=$(whereis smartctl | awk '{print$2}')
 
@@ -51,8 +46,6 @@ echo ""
 echo "This will irreversibly destroy partition- and filesystem data on drive(s):"
 echo "${HDDS}"
 echo ""
-diskinfo -v ${HDDS}
-
 echo "USE WITH EXTREME CAUTION!"
 read -r -p 'Do you confirm "yes/no": ' CHOICE
 case "${CHOICE}" in
