@@ -51,6 +51,7 @@ alias ya="yadm add"
 alias yd="yadm diff"
 alias yds="yadm diff --staged"
 alias yc="yadm commit"
+alias ycam="yadm commit -a -m"
 alias yp="yadm push"
 
 # git
@@ -88,6 +89,10 @@ cht() { curl -s cheat.sh/"$@" | cat }
 dt() { du -a ~/.config/* | awk '{print $2}' | fzf | xargs -r $EDITOR ;}
 
 vf() { fzf | xargs -r -I % $EDITOR % ;}
+
+exy() {
+    touch $1 && chmod +x $1 && v +'norm i#!/bin/sh' +'norm 2o' -- $1
+}
 
 # Disk usage
 du1() { du -h --max-depth=1 "$@" | sort -k 1,1hr -k 2,2f; }
