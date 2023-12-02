@@ -212,6 +212,7 @@ command Nows :%s/\s\+$//
 
 " make current buffer executable
 command Chmodx :!chmod a+x %
+noremap <Leader>xx :Chmodx<CR>
 
 noremap YY "+y<CR>
 noremap <leader>p "+gP<CR>
@@ -219,14 +220,14 @@ noremap XX "+x<CR>
 " noremap p "_dP<CR>
 
 "" Buffer nav
-noremap <leader>z :bp<CR>
-noremap <leader>q :bp<CR>
-noremap <leader>x :bn<CR>
-noremap <leader>w :bn<CR>
+noremap <c-n> :bn<cr>
+noremap <c-p> :bp<cr>
+noremap <c-x> :bd<cr>
 noremap <Tab> :b#<CR>
 
-"" Close buffer
-noremap <leader>c :bd<CR>
+"" map <leader>o & <leader>O to newline without insert mode
+noremap <leader>o :<C-u>call append(line("."), repeat([""], v:count1))<CR>
+noremap <leader>O :<C-u>call append(line(".")-1, repeat([""], v:count1))<CR>
 
 "" Clean search (highlight)
 nnoremap <silent> <Esc><Esc> :noh<cr>
