@@ -74,6 +74,10 @@ alias dclf="docker compose logs -f"
 alias dcpull="docker compose pull"
 alias dck="docker compose kill"
 
+# zfs
+alias zl="zfs list"
+alias zs="zl -t snapshot"
+
 # ┳━┓┳ ┓┏┓┓┏━┓┏┓┓o┏━┓┏┓┓┓━┓
 # ┣━ ┃ ┃┃┃┃┃   ┃ ┃┃ ┃┃┃┃┗━┓
 # ┇  ┇━┛┇┗┛┗━┛ ┇ ┇┛━┛┇┗┛━━┛
