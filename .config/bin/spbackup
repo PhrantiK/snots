@@ -1,0 +1,57 @@
+#!/bin/bash
+set -euo pipefail
+
+base_dir="/srv/users"
+date=$(date '+%Y%m%d-%H%M')
+
+folders=()
+i=1
+for app in "$base_dir"/*/; do
+    app_name=$(basename "$app")
+    folders+=("$app_name")
+    printf "$(tput setaf 2)%s: %s$(tput sgr0)\n" $i $app_name
+    ((i++))
+done
+
+printf "\n"
+printf "$(tput bold)Enter the number of the app you want to backup: $(tput sgr0)"
+
+read -r selection
+
+# Check if user input is a valid number
+if ! [[ "$selection" =~ ^[0-9]+$ ]] || [[ "$selection" -gt "${#folders[@]}" ]]; then
+    printf "$(tput setaf 1)Invalid selection. Exiting.$(tput sgr0)\n"
+    exit 1
+fi
+
+app=${folders[$((selection - 1))]}
+
+printf "$(tput setaf 3)Running commands on the selected app: %s $(tput sgr0)\n" $app
+
+appfolder="$base_dir/$app/apps/$app"
+
+wpconfig="$appfolder/public/wp-config.php"
+
+if [[ -f "$wpconfig" ]]; then
+    printf "Wordpress Detected\n"
+    dbname=$(grep DB_NAME "${wpconfig}" | cut -f4 -d"'")
+else 
+    printf "\n"
+    printf "$(tput bold)Enter the name of the database for the app: $(tput sgr0)"
+
+    read -r dbname
+fi
+
+dbdump="$appfolder/$app-$date.sql.gz"
+
+printf "$(tput setaf 6)\nRunning mysqldump...$(tput sgr0)\n"
+
+sudo -i mysqldump --no-tablespaces --add-drop-table $dbname | gzip > $dbdump
+
+printf "$(tput setaf 5)\nArchiving Files & Database...$(tput sgr0)\n"
+
+chown $app:$app $dbdump
+tar czPf $appfolder/$app.tgz $appfolder/public $dbdump
+rm $dbdump
+
+printf "$(tput setaf 4)\nDone!$(tput sgr0)\n"

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+project_path=$(find /srv/users/*/*/*/public -type d | fzf)
+
+if [ -n "$project_path" ]; then
+  cd "$project_path" || exit
+  echo "Navigated to $project_path"
+else
+  echo "No directory selected."
+fi
