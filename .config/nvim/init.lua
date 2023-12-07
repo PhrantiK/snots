@@ -125,7 +125,7 @@ end
 -- ┃━┃┃┃┃┃┃ ┃┃┃┃┃┃ ┳┗━┓
 -- ┇━┛┇┇┗┛┇━┛┇┇┗┛┇━┛━━┛
 
-opt = {}
+opts = {}
 
 --Remap space as leader key
 map('', '<Space>', '<Nop>', { noremap = true, silent = true })
@@ -133,24 +133,28 @@ g.mapleader = ' '
 g.maplocalleader = ' '
 
 -- Telescope bindings
-map("n", "<Leader>gt", ":Telescope git_status <CR>", opt)
-map("n", "<Leader>cm", ":Telescope git_commits <CR>", opt)
-map("n", "<Leader>ff", ":Telescope find_files <CR>", opt)
-map("n", "<Leader>fb", ":Telescope current_buffer_fuzzy_find <CR>", opt)
-map("n", "<Leader>th", ":Telescope colorscheme <CR>", opt)
-map("n", "<Leader>fd", ":Telescope find_files find_command=fd,--hidden <CR>", opt)
-map("n", "<Leader>cd", ":Telescope zoxide list <CR>", opt)
-map("n", "<Leader>fw", ":Telescope live_grep<CR>", opt)
-map("n", "<Leader><space>", ":Telescope buffers<CR>", opt)
-map("n", "<Leader>fh", ":Telescope help_tags<CR>", opt)
-map("n", "<Leader>fo", ":Telescope oldfiles<CR>", opt)
-map("n", "<Leader>tt", ":TodoTelescope<CR>", opt)
+map("n", "<Leader>gt", ":Telescope git_status <CR>", opts)
+map("n", "<Leader>cm", ":Telescope git_commits <CR>", opts)
+map("n", "<Leader>ff", ":Telescope find_files <CR>", opts)
+map("n", "<Leader>fb", ":Telescope current_buffer_fuzzy_find <CR>", opts)
+map("n", "<Leader>th", ":Telescope colorscheme <CR>", opts)
+map("n", "<Leader>fd", ":Telescope find_files find_command=fd,--hidden <CR>", opts)
+map("n", "<Leader>cd", ":Telescope zoxide list <CR>", opts)
+map("n", "<Leader>fw", ":Telescope live_grep<CR>", opts)
+map("n", "<Leader><space>", ":Telescope buffers<CR>", opts)
+map("n", "<Leader>fh", ":Telescope help_tags<CR>", opts)
+map("n", "<Leader>fo", ":Telescope oldfiles<CR>", opts)
+map("n", "<Leader>tt", ":TodoTelescope<CR>", opts)
 
 -- toggle buffer
-map("n", "<Tab>", ":b#<CR>", opt)
+-- -- buffers
+map("n", "<c-n>", ":bn<cr>", opts)
+map("n", "<c-p>", ":bp<cr>", opts)
+map("n", "<c-x>", ":bd<cr>", opts)
+map("n", "<Tab>", ":b#<CR>", opts)
 
 -- Exit terminal with esc
-map("t", "<Esc>", "<C-\\><C-n>", opt)
+map("t", "<Esc>", "<C-\\><C-n>", opts)
 
 --Remap for dealing with word wrap
 map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
@@ -163,17 +167,14 @@ map("n", "<C-l>", ":lua navi('l', 'east')<CR>", { silent = true })
 map("n", "<C-j>", ":lua navi('j', 'south')<CR>", { silent = true })
 
 -- keep visual selection when (de)indenting
-map("v", "<", "<gv", opt)
-map("v", ">", ">gv", opt)
+map("v", "<", "<gv", opts)
+map("v", ">", ">gv", opts)
 
 -- Turn off search matches with double-<Esc>
 map('n', '<Esc><Esc>', '<Esc>:nohlsearch<CR>', { silent = true })
 
 -- Don't copy the replaced text after pasting in visual mode
-map("v", "p", '"_dP', opt)
-
--- COPY EVERYTHING --
-map("n", "<C-a>", " : %y+<CR>", opt)
+map("v", "p", '"_dP', opts)
 
 -- Map <leader>o & <leader>O to newline without insert mode
 map('n', '<leader>o',
