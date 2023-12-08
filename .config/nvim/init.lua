@@ -67,14 +67,6 @@ end
 -- ┣━ ┃ ┃┃┃┃┃   ┃ ┃┃ ┃┃┃┃┗━┓
 -- ┇  ┇━┛┇┗┛┗━┛ ┇ ┇┛━┛┇┗┛━━┛
 
--- function trim_trailing_whitespaces()
---   if not vim.o.binary and vim.o.filetype ~= 'diff' then
---     local current_view = vim.fn.winsaveview()
---     vim.cmd([[keeppatterns %s/\s\+$//e]])
---     vim.fn.winrestview(current_view)
---   end
--- end
-
 function cmd(name, command, desc)
 	vim.api.nvim_create_user_command(name, command, desc)
 end
@@ -196,20 +188,11 @@ require("lazy").setup({
 		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",
 		opts = {
-			char = "│",
+			-- char = "│",
 			buftype_exclude = { "terminal", "nofile" },
 			filetype_exclude = { "help", "packer", "markdown", "mail" },
 			show_trailing_blankline_indent = false,
 		},
-	},
-
-	-- telescope
-	dependencies = {
-		"nvim-lua/plenary.nvim",
-		"debugloop/telescope-undo.nvim",
-		"nvim-telescope/telescope-file-browser.nvim",
-		"nvim-telescope/telescope-live-grep-args.nvim",
-		{ "jvgrootveld/telescope-zoxide", config = true },
 	},
 
 	{
