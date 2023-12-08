@@ -1,35 +1,6 @@
 local opt = vim.opt
 local g = vim.g
-
-local install_path = vim.fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.execute("!git clone https://github.com/wbthomason/packer.nvim " .. install_path)
-end
-
--- ┳━┓┳  ┳ ┓┏━┓o┏┓┓┓━┓
--- ┃━┛┃  ┃ ┃┃ ┳┃┃┃┃┗━┓
--- ┇  ┇━┛┇━┛┇━┛┇┇┗┛━━┛
-
-require("packer").startup(function(use)
-  use { "wbthomason/packer.nvim" }
-  use { "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" },
-    { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
-    { "jvgrootveld/telescope-zoxide", } }
-
-  -- lsp crap
-  use { "nvim-treesitter/nvim-treesitter" }
-  use { "Fymyte/mbsync.vim", ft = { "mbsync" } }
-  use { "norcalli/nvim-colorizer.lua" }
-  use { "catppuccin/nvim", as = "catppuccin" }
-  use { "nvim-lualine/lualine.nvim", requires = { "kyazdani42/nvim-web-devicons" } }
-  use { "lewis6991/gitsigns.nvim", requires = { "nvim-lua/plenary.nvim" } }
-  use { "lukas-reineke/indent-blankline.nvim" }
-  use { "terrortylor/nvim-comment" }
-  use { "folke/todo-comments.nvim" }
-  use { "windwp/nvim-autopairs" }
-  use { "lewis6991/impatient.nvim" }
-end)
+vim.cmd("colorscheme habamax")
 
 -- ┏━┓┳━┓┏┓┓o┏━┓┏┓┓┓━┓
 -- ┃ ┃┃━┛ ┃ ┃┃ ┃┃┃┃┗━┓
@@ -68,57 +39,61 @@ opt.foldmethod = "marker"
 g.loaded_fancy_comment = 1
 
 local disabled_built_ins = {
-  "netrw",
-  "netrwPlugin",
-  "netrwSettings",
-  "netrwFileHandlers",
-  "gzip",
-  "zip",
-  "zipPlugin",
-  "tar",
-  "tarPlugin",
-  "getscript",
-  "getscriptPlugin",
-  "vimball",
-  "vimballPlugin",
-  "2html_plugin",
-  "logipat",
-  "rrhelper",
-  "spellfile_plugin",
-  "matchit"
+	"netrw",
+	"netrwPlugin",
+	"netrwSettings",
+	"netrwFileHandlers",
+	"gzip",
+	"zip",
+	"zipPlugin",
+	"tar",
+	"tarPlugin",
+	"getscript",
+	"getscriptPlugin",
+	"vimball",
+	"vimballPlugin",
+	"2html_plugin",
+	"logipat",
+	"rrhelper",
+	"spellfile_plugin",
+	"matchit",
 }
 
 for _, plugin in pairs(disabled_built_ins) do
-  vim.g["loaded_" .. plugin] = 1
+	vim.g["loaded_" .. plugin] = 1
 end
 
 -- ┳━┓┳ ┓┏┓┓┏━┓┏┓┓o┏━┓┏┓┓┓━┓
 -- ┣━ ┃ ┃┃┃┃┃   ┃ ┃┃ ┃┃┃┃┗━┓
 -- ┇  ┇━┛┇┗┛┗━┛ ┇ ┇┛━┛┇┗┛━━┛
 
-function trim_trailing_whitespaces()
-  if not vim.o.binary and vim.o.filetype ~= 'diff' then
-    local current_view = vim.fn.winsaveview()
-    vim.cmd([[keeppatterns %s/\s\+$//e]])
-    vim.fn.winrestview(current_view)
-  end
+-- function trim_trailing_whitespaces()
+--   if not vim.o.binary and vim.o.filetype ~= 'diff' then
+--     local current_view = vim.fn.winsaveview()
+--     vim.cmd([[keeppatterns %s/\s\+$//e]])
+--     vim.fn.winrestview(current_view)
+--   end
+-- end
+
+function cmd(name, command, desc)
+	vim.api.nvim_create_user_command(name, command, desc)
 end
 
 function navi(wincmd, direction)
-  local previous_winnr = vim.fn.winnr()
-  vim.cmd("wincmd " .. wincmd)
+	local previous_winnr = vim.fn.winnr()
+	vim.cmd("wincmd " .. wincmd)
 
-  if previous_winnr == vim.fn.winnr() then
-    vim.fn.system('tmux-yabai.sh ' .. direction)
-  end
+	if previous_winnr == vim.fn.winnr() then
+		vim.fn.system("tmux-yabai.sh " .. direction)
+	end
 end
 
 function map(mode, lhs, rhs, opts)
-  local options = { noremap = true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-  vim.keymap.set(mode, lhs, rhs, options)
+	local options = { noremap = true }
+	if opts then
+		options = vim.tbl_extend("force", options, opts)
+	end
+	vim.keymap.set(mode, lhs, rhs, options)
 end
 
 -- ┳━┓o┏┓┓┳━┓o┏┓┓┏━┓┓━┓
@@ -128,9 +103,9 @@ end
 opts = {}
 
 --Remap space as leader key
-map('', '<Space>', '<Nop>', { noremap = true, silent = true })
-g.mapleader = ' '
-g.maplocalleader = ' '
+map("", "<Space>", "<Nop>", { noremap = true, silent = true })
+g.mapleader = " "
+g.maplocalleader = " "
 
 -- Telescope bindings
 map("n", "<Leader>gt", ":Telescope git_status <CR>", opts)
@@ -157,8 +132,8 @@ map("n", "<Tab>", ":b#<CR>", opts)
 map("t", "<Esc>", "<C-\\><C-n>", opts)
 
 --Remap for dealing with word wrap
-map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
-map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
+map("n", "k", "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
+map("n", "j", "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
 
 -- Navigation - Tmux & Vim & Yabai
 map("n", "<C-h>", ":lua navi('h', 'west')<CR>", { silent = true })
@@ -171,164 +146,244 @@ map("v", "<", "<gv", opts)
 map("v", ">", ">gv", opts)
 
 -- Turn off search matches with double-<Esc>
-map('n', '<Esc><Esc>', '<Esc>:nohlsearch<CR>', { silent = true })
+map("n", "<Esc><Esc>", "<Esc>:nohlsearch<CR>", { silent = true })
 
 -- Don't copy the replaced text after pasting in visual mode
 map("v", "p", '"_dP', opts)
 
 -- Map <leader>o & <leader>O to newline without insert mode
-map('n', '<leader>o',
-  ':<C-u>call append(line("."), repeat([""], v:count1))<CR>',
-  { silent = true })
+map("n", "<leader>o", ':<C-u>call append(line("."), repeat([""], v:count1))<CR>', { silent = true })
 
-map('n', '<leader>O',
-  ':<C-u>call append(line(".")-1, repeat([""], v:count1))<CR>',
-  { silent = true })
+map("n", "<leader>O", ':<C-u>call append(line(".")-1, repeat([""], v:count1))<CR>', { silent = true })
 
--- ┳━┓┳  ┳ ┓┏━┓o┏┓┓  ┓━┓┳━┓┏┓┓┳ ┓┳━┓
--- ┃━┛┃  ┃ ┃┃ ┳┃┃┃┃  ┗━┓┣━  ┃ ┃ ┃┃━┛
--- ┇  ┇━┛┇━┛┇━┛┇┇┗┛  ━━┛┻━┛ ┇ ┇━┛┇
+-- move blocks
+map("v", "J", ":m '>+1<CR>gv=gv", opts)
+map("v", "K", ":m '<-2<CR>gv=gv", opts)
 
-local catppuccin = require("catppuccin")
-catppuccin.setup({
-  flavour = "frappe",
-  integrations = {
-    gitgutter = true,
-    gitsigns = true,
-    telescope = true,
-    indent_blankline = {
-      enabled = true,
-      colored_indent_levels = false,
-    },
-  }
+-- focus highlight searches
+map("n", "n", "nzzzv", opts)
+map("n", "N", "Nzzzv", opts)
+
+-- ┳  ┳━┓┏━┓┓ ┳
+-- ┃  ┃━┫┏━┛┗┏┛
+-- ┇━┛┛ ┇┗━┛ ┇
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim" -- Lazy bootstrap starts here
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- ┳━┓┳  ┳ ┓┏━┓o┏┓┓┓━┓
+-- ┃━┛┃  ┃ ┃┃ ┳┃┃┃┃┗━┓
+-- ┇  ┇━┛┇━┛┇━┛┇┇┗┛━━┛
+
+require("lazy").setup({
+	{ "Fymyte/mbsync.vim", ft = { "mbsync" } },
+	{ "lewis6991/gitsigns.nvim", event = { "BufReadPre", "BufNewFile" } },
+	{ "windwp/nvim-autopairs" },
+	{ "terrortylor/nvim-comment" },
+
+	-- blankline
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		main = "ibl",
+		opts = {
+			char = "│",
+			buftype_exclude = { "terminal", "nofile" },
+			filetype_exclude = { "help", "packer", "markdown", "mail" },
+			show_trailing_blankline_indent = false,
+		},
+	},
+
+	-- telescope
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+		"debugloop/telescope-undo.nvim",
+		"nvim-telescope/telescope-file-browser.nvim",
+		"nvim-telescope/telescope-live-grep-args.nvim",
+		{ "jvgrootveld/telescope-zoxide", config = true },
+	},
+
+	{
+		"nvim-telescope/telescope.nvim",
+		event = "VeryLazy",
+		tag = "0.1.4",
+		dependencies = {
+			{ "nvim-lua/plenary.nvim" },
+			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+		},
+		config = function()
+			local telescope = require("telescope")
+			telescope.setup({
+				defaults = {
+					vimgrep_arguments = {
+						"rg",
+						"--color=never",
+						"--no-heading",
+						"--with-filename",
+						"--line-number",
+						"--column",
+						"--smart-case",
+					},
+					file_ignore_patterns = { "^.git/" },
+					mappings = {
+						i = {
+							["<C-j>"] = "move_selection_next",
+							["<C-k>"] = "move_selection_previous",
+							["<esc>"] = "close",
+						},
+					},
+					prompt_prefix = " ",
+					selection_caret = " ",
+					layout_config = {
+						horizontal = {
+							prompt_position = "top",
+							preview_width = 0.55,
+							results_width = 0.8,
+						},
+						vertical = {
+							mirror = false,
+						},
+						width = 0.87,
+						height = 0.80,
+						preview_cutoff = 120,
+					},
+					set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
+				},
+				extensions = {
+					fzf = {
+						fuzzy = true, -- false will only do exact matching
+						override_generic_sorter = true, -- override the generic sorter
+						override_file_sorter = true, -- override the file sorter
+						case_mode = "smart_case", -- or "ignore_case" or "respect_case"
+					},
+				},
+			}, telescope.load_extension("fzf"))
+		end,
+	},
+
+	-- treeshitter
+	{
+		"nvim-treesitter/nvim-treesitter",
+		build = ":TSUpdate",
+		config = function()
+			require("nvim-treesitter.configs").setup({
+				ensure_installed = { "c", "lua", "vim", "vimdoc", "query" },
+				-- Install parsers synchronously (only applied to `ensure_installed`)
+				sync_install = false,
+				-- Automatically install missing parsers when entering buffer
+				auto_install = false,
+				incremental_selection = {
+					enable = true,
+					keymaps = {
+						init_selection = "gnn",
+						node_incremental = "grn",
+						scope_incremental = "grc",
+						node_decremental = "grm",
+					},
+				},
+				indent = {
+					enable = true,
+				},
+				highlight = {
+					enable = true,
+					additional_vim_regex_highlighting = false,
+				},
+			})
+		end,
+	},
+	{
+		"nvim-lualine/lualine.nvim",
+		config = function()
+			vim.o.showmode = false
+			require("lualine").setup({
+				options = {
+					icons_enabled = true,
+					-- theme = 'dracula',
+				},
+				-- this part shows full path, helps navigate in Oil.
+				sections = {
+					lualine_c = { { "filename", path = 2 } },
+				},
+			})
+		end,
+	},
 })
-
-vim.cmd [[colorscheme catppuccin]]
-
--- blankline
-require("indent_blankline").setup {
-  char = "│",
-  buftype_exclude = { "terminal", "nofile", },
-  filetype_exclude = { "help", "packer", "markdown", "mail", },
-  show_trailing_blankline_indent = false,
-}
-
-require('impatient')
-
-require('lualine').setup {
-  options = {
-    theme = 'catppuccin'
-  }
-}
-
--- pretty pretty pretty good
-require('colorizer').setup()
-
--- gcc yo
-require('nvim_comment').setup()
-require("todo-comments").setup()
-
-require('gitsigns').setup {
-  signs = {
-    add          = { hl = 'GitSignsAdd', text = '│', numhl = 'GitSignsAddNr', linehl = 'GitSignsAddLn' },
-    change       = { hl = 'GitSignsChange', text = '│', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
-    delete       = { hl = 'GitSignsDelete', text = '_', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
-    topdelete    = { hl = 'GitSignsDelete', text = '‾', numhl = 'GitSignsDeleteNr', linehl = 'GitSignsDeleteLn' },
-    changedelete = { hl = 'GitSignsChange', text = '~', numhl = 'GitSignsChangeNr', linehl = 'GitSignsChangeLn' },
-  },
-  status_formatter = nil, -- Use default
-  watch_gitdir = {
-    interval = 100,
-  },
-}
-
--- telescope
-require('telescope').setup {
-  defaults = {
-    vimgrep_arguments = {
-      'rg',
-      '--color=never',
-      '--no-heading',
-      '--with-filename',
-      '--line-number',
-      '--column',
-      '--smart-case'
-    },
-    file_ignore_patterns = { "^.git/" },
-    mappings = {
-      i = {
-        ["<C-j>"] = "move_selection_next",
-        ["<C-k>"] = "move_selection_previous",
-        ["<esc>"] = "close"
-      }
-    },
-    prompt_prefix = " ",
-    selection_caret = " ",
-    layout_config = {
-      horizontal = {
-        prompt_position = "top",
-        preview_width = 0.55,
-        results_width = 0.8
-      },
-      vertical = {
-        mirror = false
-      },
-      width = 0.87,
-      height = 0.80,
-      preview_cutoff = 120
-    },
-    set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-  },
-  extensions = {
-    fzf = {
-      fuzzy = true, -- false will only do exact matching
-      override_generic_sorter = true, -- override the generic sorter
-      override_file_sorter = true, -- override the file sorter
-      case_mode = "smart_case" -- or "ignore_case" or "respect_case"
-    },
-  },
-}
-
--- why does zoxide work without this require?
-require('telescope').load_extension('fzf')
-
--- treeshitter
-require('nvim-treesitter.configs').setup {
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = 'gnn',
-      node_incremental = 'grn',
-      scope_incremental = 'grc',
-      node_decremental = 'grm',
-    },
-  },
-  indent = {
-    enable = true,
-  },
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-}
-
 -- ┳━┓┳ ┓┏┓┓┏━┓┏━┓┏━┓┏┏┓┏┏┓┳━┓┏┓┓┳━┓┓━┓
 -- ┃━┫┃ ┃ ┃ ┃ ┃┃  ┃ ┃┃┃┃┃┃┃┃━┫┃┃┃┃ ┃┗━┓
 -- ┛ ┇┇━┛ ┇ ┛━┛┗━┛┛━┛┛ ┇┛ ┇┛ ┇┇┗┛┇━┛━━┛
+
+-- remove trailing white space
+cmd("Nows", "%s/\\s\\+$//e", { desc = "remove trailing whitespace" })
+
+-- remove blank lines
+cmd("Nobl", "g/^\\s*$/d", { desc = "remove blank lines" })
+
+-- make current buffer executable
+cmd("Chmodx", "!chmod a+x %", { desc = "make current buffer executable" })
+
+-- fix syntax highlighting
+cmd("FixSyntax", "syntax sync fromstart", { desc = "reload syntax highlighting" })
+
+-- vertical term
+cmd("T", ":vs | :set nu! | :term", { desc = "vertical terminal" })
 
 local autocmd = vim.api.nvim_create_autocmd
 
 -- Highlight yanked text
 autocmd("TextYankPost", {
-  callback = function()
-    vim.highlight.on_yank { higroup = "Visual", timeout = 100 }
-  end,
+	callback = function()
+		vim.highlight.on_yank({ higroup = "Visual", timeout = 100 })
+	end,
 })
 
-local packer_group = vim.api.nvim_create_augroup('Packer', {
-  clear = true })
-vim.api.nvim_create_autocmd('BufWritePost', {
-  command = 'source <afile> | PackerCompile',
-  group = packer_group,
-  pattern = vim.fn.expand '$MYVIMRC',
+autocmd("BufReadPost", {
+	callback = function()
+		local mark = vim.api.nvim_buf_get_mark(0, '"')
+		local lcount = vim.api.nvim_buf_line_count(0)
+		if mark[1] > 0 and mark[1] <= lcount then
+			pcall(vim.api.nvim_win_set_cursor, 0, mark)
+		end
+	end,
+})
+
+autocmd("BufEnter", {
+	callback = function()
+		vim.opt.formatoptions:remove({ "c", "r", "o" })
+	end,
+	desc = "Disable New Line Comment",
+})
+
+-- close some filetypes with <q>
+autocmd("FileType", {
+	pattern = {
+		"qf",
+		"help",
+		"notify",
+		"lspinfo",
+		"spectre_panel",
+		"startuptime",
+		"tsplayground",
+		"PlenaryTestPopup",
+	},
+	callback = function(event)
+		vim.bo[event.buf].buflisted = false
+		map("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+	end,
+})
+
+autocmd("FileType", {
+	pattern = { "man" },
+	callback = function()
+		vim.o.showcmd = false
+		vim.o.laststatus = 0
+	end,
 })
