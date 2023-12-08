@@ -34,8 +34,6 @@ Plug 'itchyny/lightline.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'Yggdroot/indentLine'
 Plug 'catppuccin/vim', { 'as': 'catppuccin' }
-" Plug 'ojroques/vim-oscyank', {'branch': 'main'}
-" Plug 'roxma/vim-tmux-clipboard'
 Plug 'christoomey/vim-tmux-navigator'
 
 call plug#end()
@@ -95,6 +93,7 @@ set mousemodel=popup
 set t_Co=256
 set shortmess+=I
 set cursorline
+set splitbelow
 
 " change cursor in insert mode
 let &t_SI = "\e[6 q"
@@ -169,6 +168,16 @@ augroup Example
     autocmd TextYankPost * if v:event.operator ==# 'y' | call Osc52Yank() | endif
 augroup END
 
+function! CloseWithQ(buf)
+    setlocal buflisted=no
+    nnoremap <buffer> q :close<CR>
+endfunction
+
+augroup FileTypeAutocmds
+    autocmd!
+    autocmd FileType help,man call CloseWithQ(bufnr('%'))
+augroup END
+
 "*****************************************************************************
 "" Autocmd Rules
 "*****************************************************************************
@@ -199,7 +208,7 @@ set autoread
 nnoremap <SPACE> <Nop>
 let mapleader=' '
 
-" search will center on line 
+" search will center on line
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
