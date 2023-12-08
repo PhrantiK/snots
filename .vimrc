@@ -33,6 +33,8 @@ Plug 'tpope/vim-sleuth'
 Plug 'itchyny/lightline.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'Yggdroot/indentLine'
+Plug 'statox/FYT.vim'
+Plug 'roxma/vim-tmux-clipboard'
 Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 Plug 'christoomey/vim-tmux-navigator'
 
@@ -120,6 +122,8 @@ set background=dark
 let g:lightline = {'colorscheme': 'catppuccin_frappe'}
 colorscheme catppuccin_frappe
 
+let g:FYT_flash_time = 200
+
 "*****************************************************************************
 "" Commands
 "*****************************************************************************
@@ -168,14 +172,9 @@ augroup Example
     autocmd TextYankPost * if v:event.operator ==# 'y' | call Osc52Yank() | endif
 augroup END
 
-function! CloseWithQ(buf)
-    setlocal buflisted=no
-    nnoremap <buffer> q :close<CR>
-endfunction
-
-augroup FileTypeAutocmds
+augroup CloseHelpWithQ
     autocmd!
-    autocmd FileType help,man call CloseWithQ(bufnr('%'))
+    autocmd FileType help nnoremap <buffer> q :close<CR>
 augroup END
 
 "*****************************************************************************
@@ -268,4 +267,3 @@ vmap > >gv
 "" Move visual block
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
-

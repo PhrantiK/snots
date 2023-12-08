@@ -20,6 +20,7 @@ alias cp="cp -iv"
 alias rm="rm -irv"
 alias c="clear"
 alias ip="ip -color=auto"
+alias vv="v ~/.vimrc"
 
 # ls
 alias ls="ls --color=auto --group-directories-first"
