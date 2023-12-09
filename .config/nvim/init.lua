@@ -27,8 +27,9 @@ opt.scrolloff = 4 -- Lines of context
 opt.number = true
 opt.numberwidth = 2
 opt.relativenumber = true
-opt.expandtab = true
+--opt.expandtab = true
 opt.shiftwidth = 2
+opt.tabstop        = 2
 opt.smartindent = true
 opt.shortmess:append("asI") --disable intro
 opt.fillchars = { eob = " " }
@@ -106,12 +107,10 @@ map("n", "<Leader>ff", ":Telescope find_files <CR>", opts)
 map("n", "<Leader>fb", ":Telescope current_buffer_fuzzy_find <CR>", opts)
 map("n", "<Leader>th", ":Telescope colorscheme <CR>", opts)
 map("n", "<Leader>fd", ":Telescope find_files find_command=fd,--hidden <CR>", opts)
-map("n", "<Leader>cd", ":Telescope zoxide list <CR>", opts)
 map("n", "<Leader>fw", ":Telescope live_grep<CR>", opts)
 map("n", "<Leader><space>", ":Telescope buffers<CR>", opts)
 map("n", "<Leader>fh", ":Telescope help_tags<CR>", opts)
 map("n", "<Leader>fo", ":Telescope oldfiles<CR>", opts)
-map("n", "<Leader>tt", ":TodoTelescope<CR>", opts)
 
 -- toggle buffer
 -- -- buffers
@@ -179,20 +178,35 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	{ "Fymyte/mbsync.vim", ft = { "mbsync" } },
-	{ "lewis6991/gitsigns.nvim", event = { "BufReadPre", "BufNewFile" } },
-	{ "windwp/nvim-autopairs" },
-	{ "terrortylor/nvim-comment" },
+	{ "lewis6991/gitsigns.nvim", config = true, event = "VeryLazy" },
+	{ "windwp/nvim-autopairs", config = true, event = "VeryLazy" },
 
-	-- blankline
+	{ 
+		"terrortylor/nvim-comment", 
+		event = "VeryLazy",
+		config = function()
+			require('nvim_comment').setup()
+		end,
+	},
+
 	{
 		"lukas-reineke/indent-blankline.nvim",
-		main = "ibl",
-		opts = {
-			-- char = "│",
-			buftype_exclude = { "terminal", "nofile" },
-			filetype_exclude = { "help", "packer", "markdown", "mail" },
-			show_trailing_blankline_indent = false,
-		},
+		event = "VeryLazy",
+		config = function()
+			require("ibl").setup({
+				scope = {
+					show_start = false,
+				},
+				indent = {
+					char = "│",
+					tab_char = "┊",
+					smart_indent_cap = true,
+				},
+				whitespace = {
+					remove_blankline_trail = true,
+				},
+			})
+		end,
 	},
 
 	{
@@ -259,20 +273,9 @@ require("lazy").setup({
 		build = ":TSUpdate",
 		config = function()
 			require("nvim-treesitter.configs").setup({
-				ensure_installed = { "c", "lua", "vim", "vimdoc", "query" },
-				-- Install parsers synchronously (only applied to `ensure_installed`)
+				ensure_installed = { "c", "lua", "vim", "query", "dockerfile", "yaml" },
 				sync_install = false,
-				-- Automatically install missing parsers when entering buffer
-				auto_install = false,
-				incremental_selection = {
-					enable = true,
-					keymaps = {
-						init_selection = "gnn",
-						node_incremental = "grn",
-						scope_incremental = "grc",
-						node_decremental = "grm",
-					},
-				},
+				auto_install = true,
 				indent = {
 					enable = true,
 				},
@@ -283,6 +286,7 @@ require("lazy").setup({
 			})
 		end,
 	},
+
 	{
 		"nvim-lualine/lualine.nvim",
 		config = function()
@@ -290,9 +294,8 @@ require("lazy").setup({
 			require("lualine").setup({
 				options = {
 					icons_enabled = true,
-					-- theme = 'dracula',
+					theme = 'auto',
 				},
-				-- this part shows full path, helps navigate in Oil.
 				sections = {
 					lualine_c = { { "filename", path = 2 } },
 				},
@@ -300,6 +303,7 @@ require("lazy").setup({
 		end,
 	},
 })
+
 -- ┳━┓┳ ┓┏┓┓┏━┓┏━┓┏━┓┏┏┓┏┏┓┳━┓┏┓┓┳━┓┓━┓
 -- ┃━┫┃ ┃ ┃ ┃ ┃┃  ┃ ┃┃┃┃┃┃┃┃━┫┃┃┃┃ ┃┗━┓
 -- ┛ ┇┇━┛ ┇ ┛━┛┗━┛┛━┛┛ ┇┛ ┇┛ ┇┇┗┛┇━┛━━┛
