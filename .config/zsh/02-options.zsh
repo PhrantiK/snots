@@ -42,4 +42,10 @@ setopt PROMPT_SUBST
 unsetopt MENU_COMPLETE
 setopt AUTO_MENU
 
-bindkey '^E' autosuggest-accept
+autoload -z edit-command-line
+zle -N edit-command-line
+
+# ===== Bindings
+bindkey "^U" backward-kill-line
+bindkey "^E" autosuggest-accept
+bindkey -M vicmd " " edit-command-line
