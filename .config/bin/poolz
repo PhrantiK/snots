@@ -1,0 +1,14 @@
+#!/bin/sh
+
+zpool create \
+    -o ashift=12 \
+    -o autotrim=on \
+    -O compression=lz4 \
+    -O dedup=off \
+    -O xattr=sa \
+    -O acltype=posixacl \
+    -O atime=off \
+    -O relatime=on \
+    -O normalization=formD \
+    tank \
+    /dev/disk/by-id/ata-WDC_WDS100T2B0A-00SM50_22075P800136
