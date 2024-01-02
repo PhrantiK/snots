@@ -80,7 +80,6 @@ cp -r "$parent_dir/public/storage" "$update_dir/public/"
 cp -r "$parent_dir/storage/logs" "$update_dir/storage/"
 
 # Uncomment and edit the lines below to add any other folders or files that you'd like to keep 
-cp -r "$parent_dir/public/helpinv" "$update_dir/public/"
 cp "$parent_dir/public/.user.ini" "$update_dir/public/"
 
 # Replace the parent folder with the update folder 
