@@ -13,3 +13,6 @@
   manyFiles = true
 [pull]
 	rebase = false
+[safe]
+	directory = /opt/appdata/freescout/data/Modules/AcmeModule
+	directory = /opt/appdata/freescout/data/Modules/InvoiceNinjaFreeScout

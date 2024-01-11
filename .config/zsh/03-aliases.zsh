@@ -52,6 +52,8 @@ alias yp="yadm push"
 # git
 alias g="git"
 alias ga="git add"
+alias gp="git push"
+alias gl="git pull"
 alias gc="git commit --verbose"
 alias gca="git commit --verbose --all"
 alias gcam="git commit --verbose --all --message"
