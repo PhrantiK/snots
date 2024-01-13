@@ -25,4 +25,4 @@ for config (~/.config/zsh/*.zsh) source $config
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-( command -v tcc >/dev/null 2>&1 ) && tcc -run ~/.config/bin/bfetch.c
+(( $+commands[tcc] )) && tcc -run ~/.config/bin/bfetch.c

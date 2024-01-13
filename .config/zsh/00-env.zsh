@@ -13,15 +13,14 @@ test -r $d && eval "$(dircolors $d)"
 
 fpath=($ZDOTDIR $fpath)
 
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-export FZF_DEFAULT_OPTS="--height=80% --layout=reverse  --border --margin=2 --padding=2"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS=" \
---color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284 \
---color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf \
---color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284"
+(( $+commands[fdfind] )) && fzfind="fdfind" 
+(( $+commands[fd] )) && fzfind="fd"
+[ -v fzfind ] && export FZF_DEFAULT_COMMAND="$fzfind --type f --hidden --follow --exclude .git"
 
-# export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS" --color=bg+:${color_grey5},bg:${color_bg},spinner:${color_yellow},hl:${color_red} --color=fg:${color_fg},header:${color_red},info:${color_pink},pointer:${color_yellow} --color=marker:${color_yellow},fg+:${color_fg2},prompt:${color_magenta},hl+:${color_red}"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_DEFAULT_OPTS="--height=80% --layout=reverse --no-header --border --margin=2 --padding=1 --pointer=→ --prompt=→ --info=inline:' <--' --cycle --separator=' •' --scrollbar=↕"
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS" --color=bg+:8,bg:-1,spinner:3,hl:1 --color=fg:7,header:3,info:5,pointer:3 --color=marker:3,fg+:6,prompt:5,hl+:1"
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS" --bind=up:preview-up,down:preview-down,ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up"
 
 # Vim Mode
 bindkey -v

@@ -1,10 +1,18 @@
 #!/bin/bash
 
-project_path=$(find /srv/users/*/*/*/public -type d | fzf)
+# Directory where the apps are stored
+base_dir="/srv/users"
 
-if [ -n "$project_path" ]; then
-  cd "$project_path" || exit
-  echo "Navigated to $project_path"
+# Extract app names and feed them to fzf
+app_name=$(find "$base_dir" -maxdepth 2 -type d -name 'public' | \
+           awk -F'/' '{print $(NF-2)}' | \
+           sort -u | \
+           fzf)
+
+# Navigate to the selected directory
+if [ -n "$app_name" ]; then
+    cd "$base_dir/$app_name/apps/$app_name/public"
+    echo "Now in directory: $(pwd)"
 else
-  echo "No directory selected."
+    echo "No selection made."
 fi
