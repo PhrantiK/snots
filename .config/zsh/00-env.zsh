@@ -25,7 +25,6 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS" --bind=up:preview-up,down:preview-dow
 # Vim Mode
 bindkey -v
 export KEYTIMEOUT=1
-source ~/.config/zsh/cursor_mode
 
 export MANPAGER="less -R --use-color -Dd+r -Du+b"
 # export MANPAGER="vim -c 'set ft=man' -"
