@@ -11,7 +11,7 @@ for app in "$base_dir"/*/; do
 
 	if [[ -f "$wp_config" ]]; then
 		folders+=("$app_name")
-		printf   "$(tput setaf 2)%s: %s$(tput sgr0)\n" "$i" "$app_name"
+		printf "$(tput setaf 2)%s: %s$(tput sgr0)\n" "$i" "$app_name"
 		((i++))
 	fi
 done
@@ -36,28 +36,29 @@ printf "\n"
 appfolder="$base_dir/$app/apps/$app"
 
 uploads="$appfolder/public/wp-content/uploads/gravity_forms"
+yeetuploads=""
 
-if     [[ -f "$uploads" ]]; then
-	printf "$(tput setaf 2)%s$(tput sgr0)" "Gravity Forms Uploads Detected - Backup? 1 or 2"
+if     [[ -d "$uploads" ]]; then
+	printf "$(tput setaf 2)%s$(tput sgr0)" "Gravity Forms Uploads Detected - Exclude from backup? 1 or 2"
 	printf "\n"
-fi
 
-select yn in "Y" "N"; do
-	case $yn in
-	Y)
-        yeetuploads=' --exclude="'$uploads'"'
-		break
-		;;
-	N)
-		yeetuploads=""
-		break
-		;;
-	*)
-		printf "%s" "$(tput setaf 2)Select 1 or 2$(tput sgr0)"
-		printf "\n"
-		;;
-	esac
-done
+	select yn in "Y" "N"; do
+		case $yn in
+		Y)
+			# yeetuploads=" --exclude=$uploads"
+			yeetuploads=( ' --exclude=$uploads' )
+			break
+			;;
+		N)
+			break
+			;;
+		*)
+			printf "%s" "$(tput setaf 2)Select 1 or 2$(tput sgr0)"
+			printf "\n"
+			;;
+		esac
+	done
+fi
 
 wpconfig="$appfolder/public/wp-config.php"
 dbname=$(grep DB_NAME "$wpconfig" | cut -f4 -d"'")
@@ -80,7 +81,8 @@ printf "$(tput setaf 5)%s$(tput sgr0)" "Archiving Files & Database..."
 printf "\n"
 
 chown "$app":"$app" "$dbdump"
-tar czPf "$HOME/$app.tgz""$yeetuploads" "$appfolder/public" "$dbdump"
+tar czPf "$appfolder/$app.tgz""${yeetuploads[@]}" "$appfolder/public" "$dbdump"
+tar "$yeetuploads" czPf "$appfolder/$app.tgz" "$appfolder/public" "$dbdump"
 rm "$dbdump"
 
 printf "\n"
