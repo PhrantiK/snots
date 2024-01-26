@@ -3,54 +3,86 @@ set -euo pipefail
 
 base_dir="/srv/users"
 date=$(date '+%Y%m%d-%H%M')
-
 folders=()
 i=1
 for app in "$base_dir"/*/; do
-    app_name=$(basename "$app")
-    wp_config="$base_dir/$app_name/apps/$app_name/public/wp-config.php"
-    
-    if [[ -f "$wp_config" ]]; then
-        folders+=("$app_name")
-        printf "$(tput setaf 2)%s: %s$(tput sgr0)\n" $i $app_name
-        ((i++))
-    fi
+	app_name=$(basename "$app")
+	wp_config="$base_dir/$app_name/apps/$app_name/public/wp-config.php"
+
+	if [[ -f "$wp_config" ]]; then
+		folders+=("$app_name")
+		printf   "$(tput setaf 2)%s: %s$(tput sgr0)\n" "$i" "$app_name"
+		((i++))
+	fi
 done
 
 printf "\n"
-printf "$(tput bold)Enter the number of the app you want to backup: $(tput sgr0)"
+printf "$(tput bold)%s$(tput sgr0)" "Enter the number of the app you want to backup: "
+printf "\n"
 
 read -r selection
 
 # Check if user input is a valid number
 if ! [[ "$selection" =~ ^[0-9]+$ ]] || [[ "$selection" -gt "${#folders[@]}" ]]; then
-    printf "$(tput setaf 1)Invalid selection. Exiting.$(tput sgr0)\n"
-    exit 1
+	printf "%s" "$(tput setaf 1)Invalid selection. Exiting.$(tput sgr0)\n"
+	exit 1
 fi
 
 app=${folders[$((selection - 1))]}
 
-printf "$(tput setaf 3)Running commands on the selected app: %s $(tput sgr0)\n" $app
+printf "$(tput setaf 3)Running commands on the selected app: %s $(tput sgr0)" "$app"
+printf "\n"
 
 appfolder="$base_dir/$app/apps/$app"
+
+uploads="$appfolder/public/wp-content/uploads/gravity_forms"
+
+if     [[ -f "$uploads" ]]; then
+	printf "$(tput setaf 2)%s$(tput sgr0)" "Gravity Forms Uploads Detected - Backup? 1 or 2"
+	printf "\n"
+fi
+
+select yn in "Y" "N"; do
+	case $yn in
+	Y)
+        yeetuploads=' --exclude="'$uploads'"'
+		break
+		;;
+	N)
+		yeetuploads=""
+		break
+		;;
+	*)
+		printf "%s" "$(tput setaf 2)Select 1 or 2$(tput sgr0)"
+		printf "\n"
+		;;
+	esac
+done
+
 wpconfig="$appfolder/public/wp-config.php"
-dbname=$(grep DB_NAME "${wpconfig}" | cut -f4 -d"'")
-dbuser=$(grep DB_USER "${wpconfig}" | cut -f4 -d"'")
-dbpass=$(grep DB_PASSWORD "${wpconfig}" | cut -f4 -d"'")
+dbname=$(grep DB_NAME "$wpconfig" | cut -f4 -d"'")
+dbuser=$(grep DB_USER "$wpconfig" | cut -f4 -d"'")
+dbpass=$(grep DB_PASSWORD "$wpconfig" | cut -f4 -d"'")
 
-printf "Database Name: %s \n" $dbname
-printf "Database User: %s \n" $dbuser
-printf "Database Pass: %s \n" $dbpass
+printf "Database Name: %s \n" "$dbname"
+printf "Database User: %s \n" "$dbuser"
+printf "Database Pass: %s \n" "$dbpass"
 
-printf "$(tput setaf 6)\nRunning mysqldump...$(tput sgr0)\n"
+printf "\n"
+printf "$(tput setaf 6)%s$(tput sgr0)" "\nRunning mysqldump..."
+printf "\n"
 
 dbdump="$appfolder/$app-$date.sql.gz"
-mysqldump --no-tablespaces --add-drop-table -u $dbuser -p$dbpass $dbname | gzip > $dbdump
+mysqldump --no-tablespaces --add-drop-table -u "$dbuser" -p"$dbpass" "$dbname" | gzip > "$dbdump"
 
-printf "$(tput setaf 5)\nArchiving Files & Database...$(tput sgr0)\n"
+printf "\n"
+printf "$(tput setaf 5)%s$(tput sgr0)" "Archiving Files & Database..."
+printf "\n"
 
-chown $app:$app $dbdump
-tar czPf $appfolder/$app.tgz $appfolder/public $dbdump
-rm $dbdump
+chown "$app":"$app" "$dbdump"
+tar czPf "$HOME/$app.tgz""$yeetuploads" "$appfolder/public" "$dbdump"
+rm "$dbdump"
 
-printf "$(tput setaf 4)\nDone!$(tput sgr0)\n"
+printf "\n"
+printf "$(tput setaf 4)%s$(tput sgr0)" "Finished! Archive in home folder: $HOME"
+printf "\n"
