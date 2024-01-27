@@ -22,7 +22,6 @@ printf "\n"
 
 read -r selection
 
-# Check if user input is a valid number
 if ! [[ "$selection" =~ ^[0-9]+$ ]] || [[ "$selection" -gt "${#folders[@]}" ]]; then
 	printf "%s" "$(tput setaf 1)Invalid selection. Exiting.$(tput sgr0)\n"
 	exit 1
@@ -36,25 +35,24 @@ printf "\n"
 appfolder="$base_dir/$app/apps/$app"
 
 uploads="$appfolder/public/wp-content/uploads/gravity_forms"
-yeetuploads=""
 
-if     [[ -d "$uploads" ]]; then
-	printf "$(tput setaf 2)%s$(tput sgr0)" "Gravity Forms Uploads Detected - Exclude from backup? 1 or 2"
-	printf "\n"
+targs=("czPf" "$HOME/$app.tgz")
 
-	select yn in "Y" "N"; do
+uploads="$appfolder/public/wp-content/uploads/gravity_forms"
+if [[ -d "$uploads" ]]; then
+	printf  "%s" "$(tput setaf 2)Gravity Forms Uploads Detected - Backup? (1) Yes or (2) No: $(tput sgr0)"
+	printf  "\n"
+	select yn in  "Yes" "No"; do
 		case $yn in
-		Y)
-			# yeetuploads=" --exclude=$uploads"
-			yeetuploads=( ' --exclude=$uploads' )
+		Yes)
+			targs+=("--exclude=$uploads")
 			break
 			;;
-		N)
+		No)
 			break
 			;;
 		*)
-			printf "%s" "$(tput setaf 2)Select 1 or 2$(tput sgr0)"
-			printf "\n"
+			printf    "%s" "$(tput setaf 2)Select 1 or 2$(tput sgr0)" printf "\n"
 			;;
 		esac
 	done
@@ -70,7 +68,7 @@ printf "Database User: %s \n" "$dbuser"
 printf "Database Pass: %s \n" "$dbpass"
 
 printf "\n"
-printf "$(tput setaf 6)%s$(tput sgr0)" "\nRunning mysqldump..."
+printf "$(tput setaf 6)%s$(tput sgr0)" "Running mysqldump..."
 printf "\n"
 
 dbdump="$appfolder/$app-$date.sql.gz"
@@ -81,8 +79,10 @@ printf "$(tput setaf 5)%s$(tput sgr0)" "Archiving Files & Database..."
 printf "\n"
 
 chown "$app":"$app" "$dbdump"
-tar czPf "$appfolder/$app.tgz""${yeetuploads[@]}" "$appfolder/public" "$dbdump"
-tar "$yeetuploads" czPf "$appfolder/$app.tgz" "$appfolder/public" "$dbdump"
+
+targs+=("$appfolder/public" "$dbdump")
+tar "${targs[@]}"
+
 rm "$dbdump"
 
 printf "\n"
