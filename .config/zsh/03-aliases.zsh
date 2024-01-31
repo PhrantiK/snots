@@ -60,6 +60,7 @@ alias gca="git commit --verbose --all"
 alias gcam="git commit --verbose --all --message"
 alias gco="git checkout"
 alias gst="git status"
+alias gop="git config --get remote.origin.url | sed -e 's/:/\//g'| sed -e 's/ssh\/\/\///g'| sed -e 's/git@/https:\/\//g'"
 
 # compose
 alias dcb="docker compose build"

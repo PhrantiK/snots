@@ -16,3 +16,4 @@
 [safe]
 	directory = /opt/appdata/freescout/data/Modules/AcmeModule
 	directory = /opt/appdata/freescout/data/Modules/InvoiceNinjaFreeScout
+	directory = /opt/appdata/freescout/data/Modules/ShortcutKeys
