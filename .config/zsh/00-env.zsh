@@ -13,7 +13,7 @@ test -r $d && eval "$(dircolors $d)"
 
 fpath=($ZDOTDIR $fpath)
 
-(( $+commands[fdfind] )) && fzfind="fdfind" 
+(( $+commands[fdfind] )) && fzfind="fdfind" && alias fd="fdfind"
 (( $+commands[fd] )) && fzfind="fd"
 [ -v fzfind ] && export FZF_DEFAULT_COMMAND="$fzfind --type f --hidden --follow --exclude .git"
 

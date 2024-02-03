@@ -2,8 +2,7 @@
 # ┃━┫┃  ┃┃━┫┗━┓┣━ ┗━┓
 # ┛ ┇┇━┛┇┛ ┇━━┛┻━┛━━┛
 
-command -v nvim >/dev/null && alias vim="nvim" vimdiff="nvim -d" # Alias neovim as vim if present.
-command -v fdfind >/dev/null && alias fd="fdfind" #wtf
+(( $+commands[nvim] )) && alias vim="nvim" vimdiff="nvim -d"
 
 # General Aliases
 alias sudo="sudo " #Let sudo recognise aliases
