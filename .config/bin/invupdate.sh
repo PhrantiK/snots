@@ -94,6 +94,9 @@ sed -i 's/left:0;right:0;bottom:0/left:0;right:0;bottom:0;display:none;/' $paren
 # Change payment page wording
 sed -i 's/ we need more details about you./, please fill out the details below:/' $parent_dir/lang/en/texts.php
 
+# Change payment page wording
+sed -i 's/Payment was made by :client/:invoice - Payment was made by :client/' $parent_dir/lang/en/texts.php
+
 # Update config
 echo "Updating config and clearing caches..."
 $php_cli_cmd "$parent_dir/artisan" clear-compiled
