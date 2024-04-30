@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -ex
+#!/usr/bin/bash
 set -euo pipefail
 shopt -s inherit_errexit nullglob
 YW=$(echo "\033[33m")

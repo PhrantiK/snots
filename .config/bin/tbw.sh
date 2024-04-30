@@ -4,7 +4,7 @@
 # Variables                           #
 #######################################
 
-SSD_DEVICE="/dev/sdd"
+SSD_DEVICE="/dev/$1"
 
 ON_TIME_TAG="Power_On_Hours"
 WEAR_COUNT_TAG="Wear_Leveling_Count"
