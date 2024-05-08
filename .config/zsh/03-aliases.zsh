@@ -21,7 +21,7 @@ alias rm="rm -irv"
 alias c="clear"
 alias ip="ip -color=auto"
 alias vv="v ~/.vimrc"
-
+alias bash="SHELL=/bin/bash bash"
 # ls
 alias ls="ls --color=auto --group-directories-first"
 alias l="ls -lh"
