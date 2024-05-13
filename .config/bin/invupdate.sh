@@ -97,6 +97,8 @@ sed -i 's/ we need more details about you./, please fill out the details below:/
 # Change payment page wording
 # sed -i 's/Payment was made by :client/:invoice - Payment was made by :client/' $parent_dir/lang/en/texts.php
 
+$parent_dir/vendor/bin/snappdf download
+
 # Update config
 echo "Updating config and clearing caches..."
 $php_cli_cmd "$parent_dir/artisan" clear-compiled
