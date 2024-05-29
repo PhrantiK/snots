@@ -12,7 +12,6 @@ if ! zgenom saved; then
   zgenom load zdharma-continuum/fast-syntax-highlighting
   zgenom load zsh-users/zsh-autosuggestions
   zgenom load zsh-users/zsh-completions
-  zgenom load zap-zsh/sudo
 
   # save all to init script
   zgenom save
