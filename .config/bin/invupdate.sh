@@ -17,7 +17,7 @@ parent_dir="invoicing"
 update_dir="newversion"
 
 # If you need to specify a path for php-cli replace "php" below with the path e.g. "/usr/local/php81/bin/php-cli"
-php_cli_cmd="php8.1-sp"
+php_cli_cmd="php8.2-sp"
 
 ###---------------- Begin Update ----------------###
 
