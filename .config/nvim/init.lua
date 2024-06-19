@@ -73,12 +73,25 @@ function cmd(name, command, desc)
 end
 
 function navi(wincmd, direction)
-	local previous_winnr = vim.fn.winnr()
-	vim.cmd("wincmd " .. wincmd)
+    local prev_winnr = vim.fn.winnr()
+    vim.cmd("wincmd " .. wincmd)
 
-	if previous_winnr == vim.fn.winnr() then
-		vim.fn.system("tmux-yabai.sh " .. direction)
-	end
+    if prev_winnr == vim.fn.winnr() then
+        local direction_map = {
+            left = "-L",
+            bottom = "-D",
+            top = "-U",
+            right = "-R"
+        }
+
+        local dir_flag = direction_map[direction]
+
+        local pane_at_direction = vim.fn.system('tmux display-message -p "#{pane_at_' .. direction .. '}"'):gsub("\n", "")
+
+        if pane_at_direction == "0" then
+            vim.fn.system("tmux select-pane " .. dir_flag)
+        end
+    end
 end
 
 function map(mode, lhs, rhs, opts)
@@ -126,11 +139,11 @@ map("t", "<Esc>", "<C-\\><C-n>", opts)
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
 
--- Navigation - Tmux & Vim & Yabai
-map("n", "<C-h>", ":lua navi('h', 'west')<CR>", { silent = true })
-map("n", "<C-k>", ":lua navi('k', 'north')<CR>", { silent = true })
-map("n", "<C-l>", ":lua navi('l', 'east')<CR>", { silent = true })
-map("n", "<C-j>", ":lua navi('j', 'south')<CR>", { silent = true })
+-- Navigation - Tmux & Vim
+map("n", "<C-h>", ":lua navi('h', 'left')<CR>", { silent = true })
+map("n", "<C-k>", ":lua navi('k', 'top')<CR>", { silent = true })
+map("n", "<C-l>", ":lua navi('l', 'right')<CR>", { silent = true })
+map("n", "<C-j>", ":lua navi('j', 'bottom')<CR>", { silent = true })
 
 -- keep visual selection when (de)indenting
 map("v", "<", "<gv", opts)
@@ -180,15 +193,6 @@ require("lazy").setup({
 	{ "Fymyte/mbsync.vim", ft = { "mbsync" } },
 	{ "lewis6991/gitsigns.nvim", config = true, event = "VeryLazy" },
 	{ "windwp/nvim-autopairs", config = true, event = "VeryLazy" },
-
-	{ 
-		"terrortylor/nvim-comment", 
-		event = "VeryLazy",
-		config = function()
-			require('nvim_comment').setup()
-		end,
-	},
-
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		event = "VeryLazy",
