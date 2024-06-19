@@ -38,24 +38,23 @@ uploads="$appfolder/public/wp-content/uploads/gravity_forms"
 
 targs=("czPf" "$HOME/$app.tgz")
 
-uploads="$appfolder/public/wp-content/uploads/gravity_forms"
 if [[ -d "$uploads" ]]; then
-	printf  "%s" "$(tput setaf 2)Gravity Forms Uploads Detected - Backup? (1) Yes or (2) No: $(tput sgr0)"
-	printf  "\n"
-	select yn in  "Yes" "No"; do
-		case $yn in
-		Yes)
-			targs+=("--exclude=$uploads")
-			break
-			;;
-		No)
-			break
-			;;
-		*)
-			printf    "%s" "$(tput setaf 2)Select 1 or 2$(tput sgr0)" printf "\n"
-			;;
-		esac
-	done
+    printf "%s" "$(tput setaf 2)Gravity Forms Uploads Detected - Include in Backup? (1) Yes or (2) No: $(tput sgr0)"
+    printf "\n"
+    read -r yn
+    while ! [[ "$yn" =~ ^[1-2]$ ]]; do
+        printf "%s" "$(tput setaf 2)Invalid selection. Select 1 or 2: $(tput sgr0)"
+        printf "\n"
+        read -r yn
+    done
+    
+    case $yn in
+        1)
+            ;;
+        2)
+            targs+=("--exclude=$uploads")
+            ;;
+    esac
 fi
 
 wpconfig="$appfolder/public/wp-config.php"
