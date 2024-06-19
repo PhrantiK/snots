@@ -44,11 +44,11 @@ else
   echo "Downloading latest release $version"
 fi
 
-# Construct the download URL for the zip file
-zip_url="https://github.com/invoiceninja/invoiceninja/releases/download/$version/invoiceninja.zip"
+# Construct the download URL for the tar file
+tar_url="https://github.com/invoiceninja/invoiceninja/releases/download/$version/invoiceninja.tar"
 
 # Download the release
-curl --fail -L --location-trusted "$zip_url" -o invoiceninja.zip
+curl --fail -L --location-trusted "$tar_url" -o invoiceninja.tar
 
 # Check if the curl command was successful
 if [ $? -ne 0 ]; then
@@ -61,14 +61,14 @@ fi
 mkdir -p "$update_dir"
 
 # Move zip file
-mv invoiceninja.zip "$update_dir/"
+mv invoiceninja.tar "$update_dir/"
 
 # Unzip the file
-echo "Extracting zip file, this can take while..."
-unzip -qq $update_dir/invoiceninja.zip -d "$update_dir"
+echo "Extracting tar file, this can take while..."
+tar -xf "$update_dir/invoiceninja.tar" -C "$update_dir"
 
-# Delete zip file
-rm "$update_dir/invoiceninja.zip"
+# Delete tar file
+rm "$update_dir/invoiceninja.tar"
 
 # Copy the .env file, public/storage folder & snappdf to the update directory
 echo "Backing up config, logo, PDF files & snappdf versions"
@@ -107,7 +107,6 @@ $php_cli_cmd "$parent_dir/artisan" view:clear
 $php_cli_cmd "$parent_dir/artisan" migrate --force
 $php_cli_cmd "$parent_dir/artisan" optimize
 
-# Protect .env from public download
 chmod 600 $parent_dir/.env
 
 # Make sure web user owns all files
