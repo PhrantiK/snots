@@ -74,7 +74,7 @@ rm "$update_dir/invoiceninja.tar"
 echo "Backing up config, logo, PDF files & snappdf versions"
 cp "$parent_dir/.env" "$update_dir/"
 cp -r "$parent_dir/public/storage" "$update_dir/public/"
-# cp -r "$parent_dir/vendor/beganovich/snappdf/versions" "$update_dir/vendor/beganovich/snappdf/"
+cp -r "$parent_dir/vendor/beganovich/snappdf/versions" "$update_dir/vendor/beganovich/snappdf/"
 
 # Comment out the line below if you don't want to preserve the logs
 cp -r "$parent_dir/storage/logs" "$update_dir/storage/"
@@ -97,7 +97,7 @@ sed -i 's/ we need more details about you./, please fill out the details below:/
 # Change payment page wording
 # sed -i 's/Payment was made by :client/:invoice - Payment was made by :client/' $parent_dir/lang/en/texts.php
 
-$parent_dir/vendor/bin/snappdf download
+# $parent_dir/vendor/bin/snappdf download
 
 # Update config
 echo "Updating config and clearing caches..."
