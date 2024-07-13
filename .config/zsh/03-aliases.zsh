@@ -6,7 +6,7 @@
 
 # General Aliases
 alias sudo="sudo " #Let sudo recognise aliases
-alias se="sudo -E vim"
+alias se="sudoedit"
 alias diff="diff --color=auto"
 alias grep="grep --color=auto"
 alias less="less -R"
@@ -48,6 +48,7 @@ alias yds="yadm diff --staged"
 alias yc="yadm commit"
 alias ycam="yadm commit -a -m"
 alias yp="yadm push"
+alias yrm="yadm rm --cached -r"
 
 # git
 alias g="git"
@@ -169,4 +170,44 @@ disks() {
 			s=$(swapon --show)
 			_e "swaps"
 			_l "$s"
+}
+
+# extract all tha thingz
+# https://github.com/xvoland/Extract/blob/master/extract.sh
+extract() {
+	local IFS="$(printf '\n\t')"
+
+	if [ -z "$1" ]; then
+		echo "$0 <archive>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz|.zlib|.cso> ..."
+		return 1
+	else
+		for n in "$@"; do
+			case "${n%,}" in
+				*.cbt|*.tar.bz2|*.tar.gz|*.tar.xz|*.tbz2|*.tgz|*.txz|*.tar)
+					tar xvf "$n" ;;
+				*.lzma)      unlzma ./"$n"       ;;
+				*.bz2)       bunzip2 ./"$n"      ;;
+				*.cbr|*.rar) unrar x -ad ./"$n"  ;;
+				*.gz)        gunzip ./"$n"       ;;
+				*.cbz|*.epub|*.zip) unzip ./"$n" ;;
+				*.z)         uncompress ./"$n"   ;;
+				*.xz)        unxz ./"$n"         ;;
+				*.exe)       cabextract ./"$n"   ;;
+				*.cpio)      cpio -id < ./"$n"   ;;
+				*.cba|*.ace) unace x ./"$n"      ;;
+				*.zpaq)      zpaq x ./"$n"       ;;
+				*.arc)       arc e ./"$n"        ;;
+				*.7z|*.apk|*.arj|*.cab|*.cb7|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.pkg|*.rpm|*.udf|*.wim|*.xar)
+					7z x ./"$n" ;;
+				*.cso)       ciso 0 ./"$n" ./"$n.iso" && \
+					extract "$n.iso" && \rm -f "$n" ;;
+				*.zlib)      zlib-flate -uncompress < ./"$n" > ./"$n.tmp" && \
+					mv ./"$n.tmp" ./"${n%.*zlib}" && rm -f "$n" ;;
+				*)
+					echo "$0: '$n' - unknown archive method"
+					return 1
+					;;
+			esac
+		done
+	fi
 }
