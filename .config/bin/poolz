@@ -10,5 +10,7 @@ zpool create \
     -O atime=off \
     -O relatime=on \
     -O normalization=formD \
-    tank \
-    /dev/disk/by-id/ata-WDC_WDS100T2B0A-00SM50_22075P800136
+    tank mirror \
+    /dev/disk/by-id/ata-WDC_WD20EZRX-00D8PB0_WD-WCC4MF2ZS7T4 /dev/disk/by-id/ata-WDC_WD20EZRZ-00Z5HB0_WD-WCC4M2UD7PFH \
+    mirror \
+    /dev/disk/by-id/ata-WDC_WD20EZRZ-00Z5HB0_WD-WCC4M6HH09AT /dev/disk/by-id/ata-WDC_WD20EZRZ-00Z5HB0_WD-WCC4M7PNC7H5
