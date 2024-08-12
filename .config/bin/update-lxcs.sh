@@ -54,7 +54,6 @@ function needs_reboot() {
 
 function update_container() {
   container=$1
-  header_info
   name=$(pct exec "$container" hostname)
   os=$(pct config "$container" | awk '/^ostype/ {print $2}')
   if [[ "$os" == "ubuntu" || "$os" == "debian" || "$os" == "fedora" ]]; then
@@ -73,7 +72,6 @@ function update_container() {
 }
 
 containers_needing_reboot=()
-header_info
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
   if [[ " ${excluded_containers[@]} " =~ " $container " ]]; then
     header_info
@@ -101,7 +99,6 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
   fi
 done
 wait
-header_info
 echo -e "${GN}The process is complete, and the selected containers have been updated.${CL}\n"
 if [ "${#containers_needing_reboot[@]}" -gt 0 ]; then
     echo -e "${RD}The following containers require a reboot:${CL}"
