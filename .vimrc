@@ -36,6 +36,7 @@ Plug 'Yggdroot/indentLine'
 Plug 'statox/FYT.vim'
 Plug 'roxma/vim-tmux-clipboard'
 Plug 'catppuccin/vim', { 'as': 'catppuccin' }
+Plug 'cocopon/iceberg.vim', { 'as': 'iceberg' }
 Plug 'christoomey/vim-tmux-navigator'
 
 call plug#end()
@@ -119,8 +120,10 @@ endif
 
 set background=dark
 
-let g:lightline = {'colorscheme': 'catppuccin_frappe'}
-colorscheme catppuccin_frappe
+let g:lightline = {'colorscheme': 'iceberg'}
+colorscheme iceberg
+
+highlight LineNr term=bold cterm=NONE ctermbg=NONE gui=NONE guibg=NONE
 
 let g:FYT_flash_time = 200
 
