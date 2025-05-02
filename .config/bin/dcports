@@ -1,0 +1,61 @@
+#!/bin/bash
+
+e() {
+    title=$(echo "$1" | sed 's/./& /g')
+    echo -e "\033[0;31m╓─────\033[0;35m ${title}"
+    echo -e "\033[0;31m╙────────────────────────────────────── ─ ─"
+}
+
+l() {
+    X='\033[0m'
+    G='\033[0;32m'
+    R='\033[0;35m'
+    C='\033[0;36m'
+    
+    echo -e "${G}CONTAINER ID\tNAMES\t\t\tPORTS${X}"
+
+    while IFS= read -r line || [[ -n $line ]]; do
+        container_id=$(echo "$line" | awk '{print $1}')
+        container_name=$(echo "$line" | awk '{print $2}')
+        port_info=$(echo "$line" | cut -d ' ' -f 3-)
+
+        # Only include containers with actual port mappings
+        # if ! echo "$port_info" | grep -q '->'; then
+        if ! echo "$port_info" | grep --quiet -- '->'; then
+            continue
+        fi
+
+        # Deduplicate and format ports
+        formatted_ports=""
+        declare -A seen_ports=()
+        for port_mapping in $port_info; do
+            if [[ "$port_mapping" == *"->"* ]]; then
+                cleaned=$(echo "$port_mapping" | sed 's/,//g; s/\/tcp//g; s/\/udp//g; s/0.0.0.0://g; s/\[::\]://g')
+                source=$(echo "$cleaned" | cut -d '-' -f 1)
+                target=$(echo "$cleaned" | cut -d '>' -f 2)
+                pair="${source}->${target}"
+                if [[ -z "${seen_ports[$pair]}" ]]; then
+                    formatted_ports+="${G}${source}${C}->${R}${target}${X}, "
+                    seen_ports[$pair]=1
+                fi
+            fi
+        done
+
+        formatted_ports="${formatted_ports%, }"
+
+        # Adjust spacing for container name
+        if [ ${#container_name} -lt 8 ]; then
+            container_name="$container_name\t\t\t"
+        elif [ ${#container_name} -lt 16 ]; then
+            container_name="$container_name\t\t"
+        else
+            container_name="$container_name\t"
+        fi
+
+        echo -e "$container_id\t$container_name$formatted_ports"
+    done < <(printf '%s\n' "$1")
+}
+
+docker_output=$(docker container ls --format "{{.ID}} {{.Names}} {{.Ports}}")
+e "Docker Ports"
+l "$docker_output"
