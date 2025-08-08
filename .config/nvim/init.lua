@@ -31,34 +31,14 @@ opt.smartindent = true
 opt.shortmess:append("asI") --disable intro
 opt.fillchars = { eob = " " }
 opt.winborder = "rounded"
-
--- local disabled_built_ins = {
---   "netrw",
---   "netrwPlugin",
---   "netrwSettings",
---   "netrwFileHandlers",
---   "gzip",
---   "zip",
---   "zipPlugin",
---   "tar",
---   "tarPlugin",
---   "getscript",
---   "getscriptPlugin",
---   "vimball",
---   "vimballPlugin",
---   "2html_plugin",
---   "logipat",
---   "rrhelper",
---   "spellfile_plugin",
---   "matchit",
--- }
---
--- for _, plugin in pairs(disabled_built_ins) do
---   vim.g["loaded_" .. plugin] = 1
--- end
+opt.clipboard = "unnamedplus"
 
 vim.cmd("colorscheme habamax")
-vim.cmd(":hi statusline guibg=NONE")
+
+vim.o.statusline = [[ %<%f%m %r%h%w%=%{&ft!=''?&ft:'none'} [%{&ff}] %l,%c %P ]]
+
+vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'NONE', fg = '#a0a0a0' })
+vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = 'NONE', fg = '#606060' })
 
 -- ┳━┓┳ ┓┏┓┓┏━┓┏┓┓o┏━┓┏┓┓┓━┓
 -- ┣━ ┃ ┃┃┃┃┃   ┃ ┃┃ ┃┃┃┃┗━┓
@@ -105,14 +85,17 @@ end
 vim.pack.add({
   { src = "https://github.com/ibhagwan/fzf-lua" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
-  -- { src = "https://github.com/echasnovski/mini.pick" },
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
-})
-
-require("nvim-treesitter.configs").setup({
-  auto_install = true,
-  highlight = {
-    enable = true,
+  { 
+    src = "https://github.com/nvim-treesitter/nvim-treesitter", 
+    version = "main",
+    load = function()
+      require("nvim-treesitter.configs").setup({
+        auto_install = true,
+        highlight = {
+          enable = true,
+        },
+      })
+    end
   },
 })
 
