@@ -5,7 +5,6 @@ local g = vim.g
 -- ┃ ┃┃━┛ ┃ ┃┃ ┃┃┃┃┗━┓
 -- ┛━┛┇   ┇ ┇┛━┛┇┗┛━━┛
 
--- opt.ruler = false
 opt.ignorecase = true
 opt.splitbelow = true
 opt.splitright = true
@@ -13,14 +12,11 @@ opt.cul = true
 opt.mouse = "a"
 opt.signcolumn = "yes"
 opt.cmdheight = 1
--- opt.updatetime = 250 -- update interval for gitsigns
--- opt.timeoutlen = 400
--- opt.clipboard = "unnamedplus"
--- opt.lazyredraw = true
 opt.undofile = true
 opt.grepprg = "rg --vimgrep"
 opt.incsearch = true -- Makes search act like search in modern browsers
 opt.scrolloff = 4 -- Lines of context
+opt.showcmd = false
 opt.number = true
 opt.numberwidth = 2
 opt.relativenumber = true
@@ -32,10 +28,9 @@ opt.shortmess:append("asI") --disable intro
 opt.fillchars = { eob = " " }
 opt.winborder = "rounded"
 opt.clipboard = "unnamedplus"
+opt.statusline = [[ %{hostname()}%< • %{fnamemodify(getcwd(),':t')}/%<%f%m %r%h%w%=%{&ft!=''?&ft:'none'} • %l,%c • %P ]]
 
 vim.cmd("colorscheme habamax")
-
-vim.o.statusline = [[ %<%f%m %r%h%w%=%{&ft!=''?&ft:'none'} [%{&ff}] %l,%c %P ]]
 
 vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'NONE', fg = '#a0a0a0' })
 vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = 'NONE', fg = '#606060' })
@@ -212,7 +207,7 @@ local autocmd = vim.api.nvim_create_autocmd
 -- Highlight yanked text
 autocmd("TextYankPost", {
   callback = function()
-    vim.highlight.on_yank({ higroup = "Visual", timeout = 100 })
+    vim.hl.on_yank({ higroup = "Visual", timeout = 100 })
   end,
 })
 
