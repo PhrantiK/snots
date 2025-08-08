@@ -1,5 +1,6 @@
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 export PATH="$HOME/.config/bin:$PATH"
+export PATH="$HOME/.local/share/nvim-linux-x86_64/bin:$PATH"
 export HISTFILE="$HOME/.cache/zsh/.zhistory"    # History filepath
 export HISTSIZE=10000                   # Maximum events for internal history
 export SAVEHIST=10000                   # Maximum events in history file
@@ -28,4 +29,3 @@ export KEYTIMEOUT=1
 
 export MANPAGER="less -R --use-color -Dd+r -Du+b"
 # export MANPAGER="vim -c 'set ft=man' -"
-

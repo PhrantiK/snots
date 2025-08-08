@@ -14,4 +14,4 @@
 [pull]
 	rebase = false
 [safe]
-	directory = /opt/appdata/freescout/data/Modules/ShortcutKeys
+	directory = *
