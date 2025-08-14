@@ -28,12 +28,13 @@ opt.shortmess:append("asI") --disable intro
 opt.fillchars = { eob = " " }
 opt.winborder = "rounded"
 opt.clipboard = "unnamedplus"
-opt.statusline = [[ %{hostname()}%< • %{fnamemodify(getcwd(),':t')}/%<%f%m %r%h%w%=%{&ft!=''?&ft:'none'} • %l,%c • %P ]]
+opt.statusline =
+  [[ %{hostname()}%< • %{fnamemodify(getcwd(),':t')}/%<%f%m %r%h%w%=%{&ft!=''?&ft:'none'} • %l,%c • %P ]]
 
 vim.cmd("colorscheme habamax")
 
-vim.api.nvim_set_hl(0, 'StatusLine', { bg = 'NONE', fg = '#a0a0a0' })
-vim.api.nvim_set_hl(0, 'StatusLineNC', { bg = 'NONE', fg = '#606060' })
+vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE", fg = "#a0a0a0" })
+vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE", fg = "#606060" })
 
 -- ┳━┓┳ ┓┏┓┓┏━┓┏┓┓o┏━┓┏┓┓┓━┓
 -- ┣━ ┃ ┃┃┃┃┃   ┃ ┃┃ ┃┃┃┃┗━┓
@@ -80,8 +81,8 @@ end
 vim.pack.add({
   { src = "https://github.com/ibhagwan/fzf-lua" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
-  { 
-    src = "https://github.com/nvim-treesitter/nvim-treesitter", 
+  {
+    src = "https://github.com/nvim-treesitter/nvim-treesitter",
     version = "main",
     load = function()
       require("nvim-treesitter.configs").setup({
@@ -90,7 +91,7 @@ vim.pack.add({
           enable = true,
         },
       })
-    end
+    end,
   },
 })
 
