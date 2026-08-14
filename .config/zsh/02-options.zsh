@@ -26,6 +26,9 @@ setopt HIST_REDUCE_BLANKS
 # Include more information about when the command was executed, etc
 setopt EXTENDED_HISTORY
 
+# Don't run commands immediately
+setopt HIST_VERIFY
+
 # ===== Completion
 
 # Allow completion from within a word/phrase
