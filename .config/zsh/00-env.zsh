@@ -5,8 +5,19 @@ export HISTFILE="$HOME/.cache/zsh/.zhistory"    # History filepath
 export HISTSIZE=10000                   # Maximum events for internal history
 export SAVEHIST=10000                   # Maximum events in history file
 
-export EDITOR="vim"
-export VISUAL="vim"
+if (( $+commands[nvim] )); then
+  export EDITOR=nvim
+  export VISUAL=nvim
+
+  alias vim=nvim
+  alias vimdiff='nvim -d'
+elif (( $+commands[vim] )); then
+  export EDITOR=vim
+  export VISUAL=vim
+else
+  export EDITOR=vi
+  export VISUAL=vi
+fi
 
 # export TERM="xterm-256color"
 d=~/.config/zsh/dircolors

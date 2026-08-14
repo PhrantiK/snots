@@ -2,8 +2,6 @@
 # ┃━┫┃  ┃┃━┫┗━┓┣━ ┗━┓
 # ┛ ┇┇━┛┇┛ ┇━━┛┻━┛━━┛
 
-(( $+commands[nvim] )) && alias vim="nvim" vimdiff="nvim -d"
-
 # General Aliases
 alias sudo="sudo " #Let sudo recognise aliases
 alias se="sudoedit"
@@ -15,7 +13,7 @@ alias mkdir="mkdir -p"
 alias md="mkdir"
 alias sl="ls"
 alias su="sudo su"
-alias v="vim"
+alias v="$EDITOR"
 alias cp="cp -iv"
 alias rm="rm -irv"
 alias c="clear"
@@ -48,6 +46,7 @@ alias yds="yadm diff --staged"
 alias yc="yadm commit"
 alias ycam="yadm commit -a -m"
 alias yp="yadm push"
+alias yl="yadm pull"
 alias yrm="yadm rm --cached -r"
 
 # git
