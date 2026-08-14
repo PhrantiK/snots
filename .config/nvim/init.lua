@@ -29,7 +29,7 @@ opt.fillchars = { eob = " " }
 opt.winborder = "rounded"
 opt.clipboard = "unnamedplus"
 opt.statusline =
-  [[ %{hostname()}%< • %{fnamemodify(getcwd(),':t')}/%<%f%m %r%h%w%=%{&ft!=''?&ft:'none'} • %l,%c • %P ]]
+  [[ %{hostname()}%< • %{fnamemodify(getcwd(),':t')}/%<%f%m %r%h%w%=%{&ft!=''?&ft:'none'} • %l:%c • %P ]]
 
 vim.cmd("colorscheme habamax")
 
