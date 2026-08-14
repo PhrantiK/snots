@@ -1,7 +1,7 @@
 #!/bin/bash
-# Version	      0.2.4
-# Date		      08.04.2024
-# Author 	      DerDanilo 
+# Version	      0.4.0
+# Date		      17.05.2026
+# Author 	      DerDanilo
 # Contributors    aboutte, xmirakulix, bootsie123, phidauex
 
 ###########################
@@ -13,10 +13,13 @@
 #   example: export BACK_DIR="/mnt/pve/media/backup"
 #   or
 #   example: BACK_DIR="." ./prox_config_backup.sh
-DEFAULT_BACK_DIR="/tank/pve/rbackup"
+DEFAULT_BACK_DIR="/tank/pve/rbackup
 
 # number of backups to keep before overriding the oldest one
 MAX_BACKUPS=5
+
+# Set to 'true' to backup /opt/* folder
+BACKUP_OPT_FOLDER=false
 
 # Healthchecks.io notification service
 # Set to 1 to use Healthchecks.io
@@ -37,7 +40,7 @@ _bdir=${BACK_DIR:-$DEFAULT_BACK_DIR}
 
 # Check backup directory exists
 if [[ ! -d "${_bdir}" ]] ; then
-    echo "Aborting because backup target does not exists" ; exit 1
+    echo "Aborting because backup target ${_bdir} does not exist" ; exit 1
 fi
 
 # temporary storage directory
@@ -60,6 +63,17 @@ function clean_up {
 # register the cleanup function to be called on the EXIT signal
 trap clean_up EXIT
 
+function cleanup_stale_tmp {
+    local base_dir="${TMP_DIR:-/var/tmp}"
+    local stale
+    stale=$(find "$base_dir" -maxdepth 1 -name "proxmox-????????" -type d -mtime +1 2>/dev/null || true)
+    if [[ -n "$stale" ]]; then
+        echo "Removing stale temp directories from previous runs:"
+        echo "$stale"
+        echo "$stale" | xargs rm -rf
+    fi
+}
+
 # Don't change if not required
 _now=$(date +%Y-%m-%d.%H.%M.%S)
 _HOSTNAME=$(hostname)
@@ -72,6 +86,8 @@ _filename6="$_tdir/proxmoxpackages.$_now.list"
 _filename7="$_tdir/proxmoxreport.$_now.txt"
 _filename8="$_tdir/proxmoxlocalbin.$_now.tar"
 _filename9="$_tdir/proxmoxetcpve.$_now.tar"
+_filename10="$_tdir/proxmoxopt.$_now.tar"
+_filename11="$_tdir/proxmoxvzsnippets.$_now.tar"
 _filename_final="$_tdir/pve_"$_HOSTNAME"_"$_now".tar.gz"
 
 ##########
@@ -80,6 +96,8 @@ function description {
 # Check to see if we are in an interactive terminal, if not, skip the description
     if [[ -t 0 && -t 1 ]]; then
         clear
+        files_to_be_saved="/etc/*, /var/lib/pve-cluster/*, /var/lib/vz/snippets/*, /root/*, /var/spool/cron/*, /usr/share/kvm/*.vbios"
+        if [ "$BACKUP_OPT_FOLDER" = true ]; then files_to_be_saved="${files_to_be_saved}, /opt/*"; fi
         cat <<EOF
 
         Proxmox Server Config Backup
@@ -87,7 +105,7 @@ function description {
         Timestamp: "$_now"
 
         Files to be saved:
-        "/etc/*, /var/lib/pve-cluster/*, /root/*, /var/spool/cron/*, /usr/share/kvm/*.vbios"
+        "$files_to_be_saved"
 
         Backup target:
         "$_bdir"
@@ -116,10 +134,10 @@ function are-we-root-abort-if-not {
 }
 
 function check-num-backups {
-    if [[ $(ls ${_bdir}/*${_HOSTNAME}*_*.tar.gz -l | grep ^- | wc -l) -ge $MAX_BACKUPS ]]; then
-      local oldbackup="$(basename $(ls ${_bdir}/*${_HOSTNAME}*.tar.gz -t | tail -1))"
-      echo "${_bdir}/${oldbackup}"
-      rm "${_bdir}/${oldbackup}"
+    if [[ $(ls ${_bdir}/*_${_HOSTNAME}_*.tar.gz | wc -l) -ge $MAX_BACKUPS ]]; then
+      local oldbackups="$(ls ${_bdir}/*_${_HOSTNAME}_*.tar.gz -t | tail -n +$MAX_BACKUPS)"
+      echo "${oldbackups}"
+      rm ${oldbackups}
     fi
 }
 
@@ -131,6 +149,10 @@ function copyfilesystem {
     tar --warning='no-file-ignored' -cvPf "$_filename2" /var/lib/pve-cluster/.
     tar --warning='no-file-ignored' -cvPf "$_filename3" --one-file-system /root/.
     tar --warning='no-file-ignored' -cvPf "$_filename4" /var/spool/cron/.
+
+    if [ "$BACKUP_OPT_FOLDER" = true ]; then tar --warning='no-file-ignored' -cvPf "$_filename10" --one-file-system /opt/.; fi
+
+    if [ "$(ls -A /var/lib/vz/snippets 2>/dev/null)" ]; then tar --warning='no-file-ignored' -cvPf "$_filename11" /var/lib/vz/snippets/.; fi
 
     if [ "$(ls -A /usr/local/bin 2>/dev/null)" ]; then tar --warning='no-file-ignored' -cvPf "$_filename8" /usr/local/bin/.; fi
 
@@ -148,11 +170,7 @@ function copyfilesystem {
 
 function compressandarchive {
     echo "Compressing files"
-    # archive the copied system files
     tar -cvzPf "$_filename_final" $_tdir/*.{tar,list,txt}
-
-    # copy config archive to backup folder
-    # this may be replaced by scp command to place in remote location
     cp $_filename_final $_bdir/
 }
 
@@ -172,6 +190,12 @@ function startservices {
 
 ##########
 
+# Send a healthcheck.io start
+if [ $HEALTHCHECKS -eq 1 ]; then
+    curl -fsS -m 10 --retry 5 -o /dev/null $HEALTHCHECKS_URL/start
+fi
+
+cleanup_stale_tmp
 description
 are-we-root-abort-if-not
 check-num-backups
@@ -180,8 +204,7 @@ check-num-backups
 #stopservices
 
 copyfilesystem
+compressandarchive
 
 # We don't need to start services if we did not stop them
 #startservices
-
-compressandarchive
