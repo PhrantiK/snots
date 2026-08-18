@@ -73,7 +73,7 @@ alias dcpull="docker compose pull"
 alias dck="docker compose kill"
 
 # zfs
-alias zl="zfs list"
+alias zl="zfs list -t volume -o name,volsize,used,refer,local:serial"
 alias zs="zl -t snapshot"
 
 # ┳━┓┳ ┓┏┓┓┏━┓┏┓┓o┏━┓┏┓┓┓━┓
