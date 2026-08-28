@@ -73,8 +73,13 @@ alias dcpull="docker compose pull"
 alias dck="docker compose kill"
 
 # zfs
-alias zl="zfs list -t volume -o name,volsize,used,refer,local:serial"
-alias zs="zl -t snapshot"
+
+alias zp='zpool list -o name,size,alloc,free,frag,cap,health'
+alias zs='zfs list -t snapshot -o name,used,refer,creation -S used'
+alias zsp='zfs list -o space'
+alias zv='zfs list -t volume -o name,volsize,used,refer,logicalused,compressratio'
+alias zvl='zfs get used,available,referenced,usedbydataset,usedbysnapshots,usedbychildren,usedbyrefreservation,logicalused,logicalreferenced,compressratio'
+alias zio='zpool iostat -v nvme 2'
 
 # ┳━┓┳ ┓┏┓┓┏━┓┏┓┓o┏━┓┏┓┓┓━┓
 # ┣━ ┃ ┃┃┃┃┃   ┃ ┃┃ ┃┃┃┃┗━┓
