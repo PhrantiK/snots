@@ -215,3 +215,10 @@ extract() {
 		done
 	fi
 }
+
+list_comps() {
+  for command in ${(k)_comps}; do
+    completions=${_comps[$command]}
+    printf "%-32s %s\n" $command $completions
+  done | sort | less
+}
