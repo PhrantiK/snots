@@ -104,6 +104,14 @@ exy() {
 # Disk usage
 du1() { du -h --max-depth=1 "$@" | sort -k 1,1hr -k 2,2f; }
 
+# container names in tmux window title
+ct() {
+    local id="${1:?Usage: ct <container-id>}" config name
+    config=$(pct config "$id") || return
+    name=$(printf '%s\n' "$config" | awk '$1 == "hostname:" { print $2; exit }')
+    tmux new-window -n "${name:-CT-$id}" pct enter "$id"
+}
+
 apt-history() {
   case "$1" in
     install)
